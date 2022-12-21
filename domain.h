@@ -6,60 +6,82 @@
 
 using namespace std;
 
-namespace mkdomain {
+namespace mkdomain
+{
 
-class Box {
+    class Box
+    {
 
-  int capacity;
+        int capacity;
+        int size;
 
-public:
-  // constructor \w member initializer
-  Box(int cap);
-  // classic version to add
-  Box add(const Box &other) const;
+    public:
+        // constructor \w member initializer
+        Box(int cap);
 
-  // operator overloading
-  Box operator+(const Box &other) const;
+        void addItems(int itemCount);
 
-  int getCapacity() const { return capacity; }
+        // classic version to add
+        Box add(const Box &other) const;
 
-private:
-  // To get cout to accept a Box object after the insertion operator, overload
-  // the insertion operator
-  //friend ostream &operator<<(ostream &os, const Box &box);
+        // operator overloading as member function
+        // left operand becomes implicit *this object.
+        Box operator+(const Box &other) const;
 
-}; // class Box
+        string toString() const;
 
-ostream &operator<<(ostream &os, const Box &box);
+        // const member: can't modify object
+        // "const" after argument list
+        // can be called for a const object.
+        int getCapacity() const
+        {
+            return capacity;
+        }
 
+        // const member: can't modify object
+        int getSize() const
+        {
+            return size;
+        }
 
+    private:
+        // To get cout to accept a Box object after the insertion operator, overload
+        // the insertion operator
+        // friend ostream &operator<<(ostream &os, const Box &box);
 
-class Entity {
+    }; // class Box
 
-  string e_name;
-  int e_size;
+    // Operator overloading using non-member function:
+    Box operator-(const Box &left, const Box &right);
 
-public:
-  // default constructor
-  // C++11 allows constructors to call other peer constructors ("delegation").
-  // This allows constructors to utilize another constructor's behavior with a
-  // minimum of added code.
-  Entity();
+    // Operator overloading using non-member function:
+    ostream &operator<<(ostream &os, const Box &box);
 
-  // A default parameter is only used in the declaration.
-  Entity(const string &n, int s = 1);
+    class Entity
+    {
 
-  // Destructors are a “prepare to die” member function. It never takes any
-  // parameters, and it never returns anything. The most common example is when
-  // the constructor uses new, and the destructor uses delete.
-  ~Entity();
+        string e_name;
+        int e_size;
 
-  // getter
-  const string &getName() const { return e_name; }
-  int getSize() const { return e_size; }
+    public:
+        // default constructor
+        // C++11 allows constructors to call other peer constructors ("delegation").
+        // This allows constructors to utilize another constructor's behavior with a
+        // minimum of added code.
+        Entity();
 
-}; // class Entity
+        // A default parameter is only used in the declaration.
+        Entity(const string &n, int s = 1);
 
+        // Destructors are a “prepare to die” member function. It never takes any
+        // parameters, and it never returns anything. The most common example is when
+        // the constructor uses new, and the destructor uses delete.
+        ~Entity();
 
+        // getter
+        const string &getName() const { return e_name; }
+        int getSize() const { return e_size; }
+
+    }; // class Entity
 
 } // namespace mkdomain
