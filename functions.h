@@ -1,8 +1,9 @@
 /* functions.h */
-#if !defined(_FUNC_H_)
+#pragma once
 
-#define _FUNC_H_
+#include "domain.h"
 #include "enums.h"
+
 void helloWorld();
 void variableBasics();
 
@@ -19,6 +20,7 @@ int sumAllInputs();
 void compareInputs();
 
 void pointerBasics();
+void checkParams(mkdomain::Box *b);
 int incrementV1(int arg);
 void incrementV2(int *arg);
 void incrementV3(int &arg);
@@ -27,5 +29,3 @@ int *returnTheAddressOfALocal();
 
 void enumBasics();
 void printEnum(Day d);
-
-#endif
