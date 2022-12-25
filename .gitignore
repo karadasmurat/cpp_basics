@@ -1,6 +1,6 @@
 #MK
 .DS_Store
-.vscode/
+# .vscode/   #tasks.json - build config, launch.json debug config
 main.dSYM
 main
 

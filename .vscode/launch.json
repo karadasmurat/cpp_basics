@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [{
+        "name": "C/C++: clang++ build and debug active file",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${fileDirname}/${fileBasenameNoExtension}",
+        "args": [],
+        "stopAtEntry": false,
+        "cwd": "${fileDirname}",
+        "environment": [],
+        // macOS: When set to true, it will spawn an external console through lldb-mi. When set to false, the output can be seen in VS Code's debugConsole. 
+        // Due to limitations within lldb-mi, integratedTerminal support is not available.
+        "externalConsole": true, // <-- Change to "true" in here
+        "MIMode": "lldb",
+        "preLaunchTask": "C/C++: clang++ build active file"
+    }]
+}
