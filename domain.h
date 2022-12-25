@@ -4,7 +4,9 @@
 #pragma once
 #include <iostream>
 
-using namespace std;
+// using namespace std;
+// using std::ostream;
+// using std::string;
 
 namespace mkdomain
 {
@@ -28,7 +30,7 @@ namespace mkdomain
         // left operand becomes implicit *this object.
         Box operator+(const Box &other) const;
 
-        string toString() const;
+        std::string toString() const;
 
         // const member: can't modify object
         // "const" after argument list
@@ -55,12 +57,12 @@ namespace mkdomain
     Box operator-(const Box &left, const Box &right);
 
     // Operator overloading using non-member function:
-    ostream &operator<<(ostream &os, const Box &box);
+    std::ostream &operator<<(std::ostream &os, const Box &box);
 
     class Entity
     {
 
-        string e_name;
+        std::string e_name;
         int e_size;
 
     public:
@@ -71,7 +73,7 @@ namespace mkdomain
         Entity();
 
         // A default parameter is only used in the declaration.
-        Entity(const string &n, int s = 1);
+        Entity(const std::string &n, int s = 1);
 
         // Destructors are a “prepare to die” member function. It never takes any
         // parameters, and it never returns anything. The most common example is when
@@ -79,7 +81,7 @@ namespace mkdomain
         ~Entity();
 
         // getter
-        const string &getName() const { return e_name; }
+        const std::string &getName() const { return e_name; }
         int getSize() const { return e_size; }
 
     }; // class Entity

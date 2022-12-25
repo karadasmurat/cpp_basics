@@ -1,8 +1,17 @@
 /* functions.h */
 #pragma once
 
+#include <vector>
 #include "domain.h"
 #include "enums.h"
+
+/*
+In general, avoid putting using directives in header files (*.h) because any file that includes that header
+will bring everything in the namespace into scope, which can cause name hiding and name collision problems
+that are very difficult to debug.
+Always use fully qualified names in a header file.
+*/
+// using std::vector;
 
 void helloWorld();
 void variableBasics();
@@ -29,3 +38,7 @@ int *returnTheAddressOfALocal();
 
 void enumBasics();
 void printEnum(Day d);
+
+void functionPointerBasics();
+void loopAndCallFunctionParam(std::vector<int> &v, void (*f)(int));
+void simplePrint(int arg);

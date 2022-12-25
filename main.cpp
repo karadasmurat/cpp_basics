@@ -15,6 +15,7 @@ In C, the usual convention is to give header files names that end with .h
 */
 
 #include <iostream>
+#include <vector>
 #include "functions.h"
 #include "domain.h"
 #include "enums.h"
@@ -64,13 +65,37 @@ controlled text
 #define LOG(msg) \
     std::cout << msg << std::endl
 
+    // using directive for "all the identifiers" in the namespace
     using namespace std;
 using namespace mkdomain;
+
+// using declaration for a single identifier:
+// using std::cin;
+// using std::cout;
 
 void macroBasics();
 void classBasics();
 void inheritanceBasics();
 void referenceBasics();
+
+/*
+A namespace is a declarative region that provides a scope to the identifiers (the names of types, functions, variables, etc) inside it.
+Namespaces are used to organize code into logical groups and to prevent name collisions that can occur
+especially when your code base includes multiple libraries.
+
+All identifiers at namespace scope are visible to one another without qualification.
+Identifiers outside the namespace can access the members by
+    using the fully qualified name for each identifier, (std::string str;)
+    or else by a using Declaration for a single identifier (using std::string),
+    or a using Directive for all the identifiers in the namespace (using namespace std;).
+
+Code in header files should always use the fully qualified namespace name.
+*/
+namespace mk
+{
+    int ns_var1{111};
+    int ns_var2{222};
+}
 
 class A
 {
@@ -209,6 +234,9 @@ int main()
     // cout << "Hello, there!" << endl;
     helloWorld();
 
+    // identifier at namespace
+    simplePrint(mk::ns_var1);
+
     // macroBasics();
 
     // variableBasics();
@@ -222,9 +250,11 @@ int main()
     // pointerBasics();
     // referenceBasics();
     // classBasics();
-    inheritanceBasics();
+    // inheritanceBasics();
 
     // enumBasics();
+
+    functionPointerBasics();
 
     return 0;
 }

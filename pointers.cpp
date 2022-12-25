@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include <assert.h> /* assert */
 #include "functions.h"
 
@@ -240,4 +241,43 @@ int *returnTheAddressOfALocal()
 {
   int a = 5;
   return &a; // address of stack memory associated with local variable returned!!
+}
+
+/*
+A function that accepts another function as an input.
+
+A function pointer is a variable that stores the address of a function that can later be called through that function pointer.
+
+A use for function pointers is setting up "listener" or "callback" functions that are invoked when a particular event happens. The function is called, and this notifies your code that something of interest has taken place. One example is when you're writing code for a graphical user interface (GUI). Most of the time, the user will interact with a loop that allows the mouse pointer to move and that redraws the interface. Sometimes, however, the user will click on a button or enter text into a field. These operations are "events" that may require a response that your program needs to handle. How can your code know what's happening? Using Callback functions! The user's click should cause the interface to call a function that you wrote to handle the event.
+
+Function Pointer Syntax
+The key to writing the declaration for a function pointer is that you're just writing out the declaration of a function but with (*func_name) where you'd normally just put func_name. For example:
+
+    f is a pointer to a function taking one integer argument, and returns void:
+
+    void (*f)(int);
+
+Invoke the function pointed to just as if you were calling a function.
+
+    f(n);
+
+Function pointers provide a way of passing around instructions for how to do something.
+You can write flexible functions and libraries that allow the programmer to choose behavior by passing function pointers as arguments
+
+*/
+
+void loopAndCallFunctionParam(vector<int> &v, void (*f)(int))
+{
+  for (int n : v)
+  {
+    // execute callback - with related parameters!
+    f(n);
+  }
+}
+
+void functionPointerBasics()
+{
+
+  vector<int> nums{1, 2, 3, 4, 5};
+  loopAndCallFunctionParam(nums, simplePrint);
 }
