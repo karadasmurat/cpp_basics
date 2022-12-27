@@ -1,16 +1,46 @@
 /*
-$ g++ -std=c++20 main.cpp helloworld.cpp domain.cpp references.cpp basics.cpp pointers.cpp -o main && ./main
+$ g++ -std=c++20 main.cpp helloworld.cpp domain.cpp -o main && ./main
+
+The Clang Compiler is an open-source compiler for the C family of programming languages
+$ clang++ -std=c++20 *.cpp -o main && ./main
+
+VSCode Run:
+Ctrl Fn F5
+
+GCC
+The GNU Compiler Collection includes front ends for C, C++, Objective-C, Fortran, Ada, Go, and D,
+as well as libraries for these languages (libstdc++,...).
+GCC was originally written as the compiler for the GNU operating system.
+
+Mingw-w64
+An advancement of the original mingw.org project, created to support the GCC compiler on Windows systems.
 
 Format code on VSCode: Command Palette > Format Document With > C/C++
 Shortcut: Alt Shift F
+
+The compilation process
+1. pre-processor: Takes source code and produce pre-processed source file.
+2. compiler     : Takes pre-processed source file and compiles into object-files.
+3. linker       : Takes object files, links them into an executable program.
+
 */
 
 /*
+
+To allow programs to be written in logical parts, C++ supports what is commonly known as separate compilation.
+Separate compilation lets us split our programs into several files, each of which can be compiled independently.
+
+To support separate compilation, C++ distinguishes between declarations and definitions.
+A declaration makes a name known to the program. A file that wants to use a name defined elsewhere includes a declaration for that name.
+A definition creates the associated entity.
+
+Since #include s logically happen before anything else a compiler does, handling #includes is part of what is called "preprocessing"
 Including a header file produces the same results as copying the header file into each source file that needs it.
 Such copying would be time-consuming and error-prone.
 With a header file, the related declarations appear in only one place.
 If they need to be changed, they can be changed in one place, and programs that include the header file
 will automatically use the new version when next recompiled.
+
 In C, the usual convention is to give header files names that end with .h
 */
 
@@ -66,12 +96,29 @@ controlled text
     std::cout << msg << std::endl
 
     // using directive for "all the identifiers" in the namespace
-    using namespace std;
+    ;
+
+using namespace std;
 using namespace mkdomain;
 
 // using declaration for a single identifier:
 // using std::cin;
 // using std::cout;
+
+/*
+    A "type alias" is a name that is a synonym for another type.
+    Type aliases let us simplify complicated type definitions, making those types easier to use.
+
+    Traditionally, we use a typedef. The new standard introduced a second way to define a type alias,
+    via an alias declaration: using identifier = type;
+
+        // C++11
+        using counter = long;
+
+        // C++03 equivalent:
+        typedef long counter;
+
+*/
 
 void macroBasics();
 void classBasics();
@@ -95,7 +142,7 @@ namespace mk
 {
     int ns_var1{111};
     int ns_var2{222};
-}
+};
 
 class A
 {
@@ -114,8 +161,9 @@ public:
     {
         cout << "Construct B!" << endl;
     }
-    /* copy constructor
-    class-name (const class-name&)
+    /*
+    copy constructor
+    classname (const classname&)
     The copy constructor is called whenever an object is initialized from another object of the same type.
 
     initialization:
@@ -228,18 +276,25 @@ public:
 
 void doNothing(B b);
 
+/*
+Every program in C++ has one function, always named main, that is always called when your program first executes.
+
+The return value from main() is passed to “the system” that invoked the program.
+Some systems (such as Unix) often use that value, whereas others (such as Windows) typically ignore it.
+A zero indicates successful completion and a nonzero return value from main() indicates some sort of failure.
+*/
 int main()
 {
-
     // cout << "Hello, there!" << endl;
     helloWorld();
 
     // identifier at namespace
-    simplePrint(mk::ns_var1);
+    // simplePrint(mk::ns_var1);
 
     // macroBasics();
 
     // variableBasics();
+    // constBasics();
 
     // inputBasics();
 
@@ -248,13 +303,13 @@ int main()
     // cout << "getMax(33, 55, 44): " << getMax(33, 55, 44) << endl;
 
     // pointerBasics();
-    // referenceBasics();
+    referenceBasics();
     // classBasics();
     // inheritanceBasics();
 
     // enumBasics();
 
-    functionPointerBasics();
+    // functionPointerBasics();
 
     return 0;
 }

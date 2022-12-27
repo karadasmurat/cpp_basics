@@ -15,6 +15,7 @@ Always use fully qualified names in a header file.
 
 void helloWorld();
 void variableBasics();
+void constBasics();
 
 int getBiggerOfTwo(int x, int y);
 int getMax(int x, int y, int z);
@@ -29,16 +30,21 @@ int sumAllInputs();
 void compareInputs();
 
 void pointerBasics();
+void referenceBasics();
+void pointerToAPointer();
 void checkParams(mkdomain::Box *b);
 int incrementV1(int arg);
 void incrementV2(int *arg);
-void incrementV3(int &arg);
+void increment_ref(int &arg);
 double *createAndPassBack(int size);
 int *returnTheAddressOfALocal();
+void functionPointerBasics();
 
 void enumBasics();
 void printEnum(Day d);
 
-void functionPointerBasics();
-void loopAndCallFunctionParam(std::vector<int> &v, void (*f)(int));
 void simplePrint(int arg);
+void simplePrint(int *p);
+void simplePrint(const int *p);
+void simplePrint(const std::string &title, int arg);
+void simplePrint(const std::string &title, double arg);
