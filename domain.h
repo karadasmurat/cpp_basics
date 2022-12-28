@@ -66,10 +66,6 @@ namespace mkdomain
         int e_size;
 
     public:
-        // default constructor
-        // C++11 allows constructors to call other peer constructors ("delegation").
-        // This allows constructors to utilize another constructor's behavior with a
-        // minimum of added code.
         Entity();
 
         // A default parameter is only used in the declaration.

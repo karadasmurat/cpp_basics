@@ -50,6 +50,13 @@ void enumBasics()
 
     ++m; // Operator overloading
     cout << "++m: " << int(m) << endl;
+
+    Size size = XS;
+    Day day = Monday;
+
+    // warning! enum-compare different enumeration types
+    if (size == day) // true
+        cout << "Different enumeration types are equal?" << endl;
 }
 
 void printEnum(Day d)

@@ -294,6 +294,8 @@ int main()
     // macroBasics();
 
     // variableBasics();
+    stringBasics();
+    // arrayBasics();
     // constBasics();
 
     // inputBasics();
@@ -303,13 +305,15 @@ int main()
     // cout << "getMax(33, 55, 44): " << getMax(33, 55, 44) << endl;
 
     // pointerBasics();
-    referenceBasics();
+    // referenceBasics();
     // classBasics();
     // inheritanceBasics();
 
     // enumBasics();
 
     // functionPointerBasics();
+
+    // templateFunctions();
 
     return 0;
 }

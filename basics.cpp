@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip> // std::setprecision
 #include "functions.h"
 
 using namespace std;
@@ -6,6 +7,11 @@ using namespace std;
 void simplePrint(int arg)
 {
   cout << arg << endl;
+}
+
+void simplePrint(double arg)
+{
+  std::cout << std::fixed << std::setprecision(2) << arg << endl;
 }
 
 void simplePrint(int *p)
@@ -63,7 +69,7 @@ void variableBasics()
     std::string str;  // implicitly initialized to the empty string
 */
 
-  // In C and C++, local variables aren't initialized by default.
+  // In C and C++, LOCAL primitives are NOT initialized by default.
   // Uninitialized variables can contain any value, and their use leads to undefined behavior.
   int a, b, c; // Danger!
   a = b + c;
@@ -106,6 +112,154 @@ void variableBasics()
 
   // TODO
   // sizes();
+}
+
+void stringBasics()
+{
+
+  // C++ has several different forms of initialization
+
+  std::string s1;        // default initialization; empty string
+  std::string s2("MK");  // direct initialization
+  std::string s3 = s1;   // copy initialization
+  std::string s4 = "MK"; // copy initialization
+  s1 = "MK";             // copy assignment (operator=) (s1 was initialized before)
+
+  // Ask the compiler to provide appropriate type by using "auto". (string::size_type)
+  // Although we don’t know the precise type of string::size_type,
+  // we do know that it is an unsigned type big enough to hold the size of any string (machine independent manner)
+  auto str_length = s1.size();
+  cout << "\"MK\".size(): " << str_length << endl;
+
+  if (s1.empty() || s1.size() < 2)
+    cout << "Do we have a problem with the string?" << endl;
+
+  // Dealing with the Characters in a string
+  char mychar = 'A', mydigit = '5';
+  if (isalpha(mychar) && isupper(mychar) && isdigit(mydigit))
+    cout << "valid char" << endl;
+
+// If we want to do something to every character in a string
+// by far the best approach is to use a statement introduced by the new standard: the range for statement.
+std:
+  string username = "$abc123_";
+  bool allAlphaNumericChars = true;
+  // int punct_cnt = 0;
+  decltype(username.size()) punct_cnt = 0; // decltype to declare our counter based on the string username. (size_t)
+  for (auto c : username)                  // char c
+  {
+    if (ispunct(c))
+      ++punct_cnt;
+    if (!isalnum(c))
+      allAlphaNumericChars = false;
+  }
+
+  // convert to uppercase
+  for (auto &c : username) // for each char in username (note: c is a reference)
+  {
+    c = toupper(c);
+  }
+
+  std::string result = allAlphaNumericChars ? "valid" : "invalid";
+  cout << "Punctuation chars (" << username << "): " << punct_cnt << endl;
+  cout << "Only alphanumeric chars (" << username << "): " << result << endl;
+
+  // use the subscript operator to print the first character
+  // When we use a subscript, we must ensure that the subscript is in range.
+  // That is, the subscript must be >= 0 and < the size() of the string.
+  // One way to simplify code that uses subscripts is always to use a variable of type string::size_type as the subscript.
+  // Because that type is unsigned, we ensure that the subscript cannot be less than zero.
+
+  if (!username.empty())
+    cout
+        << "First character is: " << username[0] << endl;
+}
+
+void arrayBasics()
+{
+  /*
+  An array (c-array) is a homogeneous sequence of objects allocated in contiguous memory;
+  that is, all elements of an array have the same type and there are no gaps between the objects of the sequence.
+  The elements of an array are numbered from 0 upward. In a declaration, an array is indicated by “square brackets”
+
+  Note the limitation: the number of elements of a named array must be known at compile time. size cannot be changed.
+
+  Declare an array: N elements of type T
+
+    T identifier[N] // uninitialized!
+
+  The name of an array refers to all the elements of the array. Consider:
+
+    char ch[100];
+    sizeof(ch);     // 100 * 1byte
+  */
+
+  // In a declaration, an array is indicated by square brackets
+  int myArray[10];
+
+  // declare an array of Entity objects
+  mkdomain::Entity entities[5]; // calls the default constructor 5 times
+
+  // all elements initialized to 0
+  int scores[5] = {};
+  int *p = scores; // &scores[0]
+
+  cout << "int scores[5];" << endl;
+  cout << "scores: "
+       << scores << endl; // 0x...
+  cout << "&scores[0]: "
+       << &scores[0] << endl; // same
+  cout << "scores[0]: "
+       << scores[0] << endl;
+  cout << "sizeof(scores): "
+       << sizeof(scores) << endl; // 5 * 4 bytes = 20
+  cout << "size of ptr: "
+       << sizeof(p) << endl; // 4 bytes
+
+  // printArray_v1(5, scores);
+  printArray_v2(5, scores);
+
+  // arrays can be initialized by a list of values of their element type
+  double areas[] = {1.0, 2.0, 3.0};
+
+  // An array of chars can be initialized with a string literal. “the compiler adds a terminating zero character at the end of a string literal.
+  // Remember: An array does not know its size. Relying on the terminating zero convention, we can write strlen()
+
+  // C style strings
+  // char *codePtr = "XYZ123";
+  char codeArr[] = "XYZ123";
+
+  // codePtr[0] = '_';
+  // codeArr[0] = '_';
+
+  // cout << "codePtr" << codePtr << endl;
+  cout << "codeArr" << codeArr << endl;
+
+  char name[] = {'A', 'l', 'b', 'u', 's'};
+}
+
+// Remember: An array does not know its size.
+void printArray_v1(int cnt, int arg[])
+{
+  cout << "Array contents: " << endl;
+  for (int i = 0; i < cnt; i++)
+  {
+    cout << arg[i];
+    if (i != cnt - 1)
+      cout << ", ";
+  }
+}
+
+void printArray_v2(int cnt, int *arg)
+{
+  cout << "Array contents: " << endl;
+  for (int i = 0; i < cnt; i++)
+  {
+    // dereference using []
+    cout << arg[i];
+    if (i != cnt - 1)
+      cout << ", ";
+  }
 }
 
 /*
@@ -181,12 +335,12 @@ void constBasics()
 void inputBasics()
 {
 
-  // getUserInput();
-  addInputNumbers();
+  getUserInputStr();
+  // addInputNumbers();
   // sumAllInputs();
   // compareInputs();
 }
-void getUserInput()
+void getUserInputStr()
 {
 
   // read from s into x
@@ -196,11 +350,29 @@ void getUserInput()
   // s << x
 
   string name;
-  cout << "Please enter your name: ";
 
-  // A string read using >> is (by default) terminated by whitespace; that is,
+  // 1. A string read using >> is (by default) terminated by whitespace; that is,
   // it reads a single word. whitespace by default is ignored by >>
-  cin >> name; // read characters into name
+  // cin >> name; // read characters into name (only the first word)
+
+  // 2. Sometimes we do not want to ignore the whitespace in our input.
+  // In such cases, we can use the getline() function instead of the >> operator.
+
+  while (true)
+  {
+    // get input
+    cout << "\nPlease enter your name: ";
+    getline(cin, name);
+
+    // check validity. If valid, break the loop
+    if (name.empty())
+      cout << "Missing name." << endl;
+    else if (name.size() < 2) // returns string::size_t type value, not int. (machine independent manner)
+      cout << "At least 2 chars. " << endl;
+    else
+      break; // valid input, break the loop
+
+  } // loop while there is a problem
 
   cout << "Hello, " << name << endl;
 }
@@ -264,6 +436,30 @@ void compareInputs()
 
     cout << "Enter two integers: ";
   }
+}
+
+/*
+Function templates are special functions that can operate with generic types.
+This allows us to create a function template whose functionality can be adapted to more than one type or class
+without repeating the entire code for each type.
+*/
+template <typename T>
+T getMax(T a, T b)
+{
+  return a > b ? a : b;
+}
+
+void templateFunctions()
+{
+
+  int x{10}, y{20};
+  double d1{10.0}, d2{20.0};
+
+  int max_i = getMax(x, y);
+  double max_d = getMax(d1, d2);
+
+  simplePrint(max_i);
+  simplePrint(max_d);
 }
 
 int getBiggerOfTwo(int x, int y)

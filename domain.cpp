@@ -61,15 +61,17 @@ namespace mkdomain
         return os;
     }
 
-    // DEFINITION
-    // into cpp file
+    // DEFINITION into .cpp source file.
+    // default constructor
+    // C++11 allows constructors to call other peer constructors ("delegation").
+    // This allows constructors to utilize another constructor's behavior with a
+    // minimum of added code.
     Entity::Entity() : Entity("Default") {}
 
     // A default parameter is only used in the declaration.
-    Entity::Entity(const string &n, int s) : e_name(n), e_size(s)
+    Entity::Entity(const string &name, int s) : e_name(name), e_size(s)
     {
-        cout << "Construct Entity obj"
-             << endl;
+        cout << "Construct Object: Entity{name:" << e_name << ", size:" << e_size << "}" << endl;
     }
     Entity::~Entity() { cout << "Destruct Entity obj " << e_name << endl; }
 }
