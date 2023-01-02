@@ -73,3 +73,5 @@ void simplePrint(const std::string &title, double arg);
 
 void printArray_v1(int cnt, int arg[]);
 void printArray_v2(int cnt, int *arg);
+
+int binarySearch(int *arr, int cnt, int arg);
