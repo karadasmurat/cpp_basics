@@ -2,6 +2,7 @@
 #pragma once
 
 #include <vector>
+
 #include "domain.h"
 #include "enums.h"
 
@@ -10,7 +11,8 @@
 “Code inside headers ordinarily should not use using
  declarations.  If a header has a using
  declaration, then every program that includes that header gets that same using
- declaration. As a result, a program that didn’t intend to use the specified library name might encounter unexpected name conflicts.”
+ declaration. As a result, a program that didn’t intend to use the specified
+library name might encounter unexpected name conflicts.”
 
 Excerpt From
 C++ Primer, 5/e
@@ -19,9 +21,11 @@ This material may be protected by copyright.
 
 
 In general, avoid putting using directives in header files (*.h)
-The reason is that the contents of a header are copied into the including program’s text:
-If a header has a using declaration, then every program that includes that header gets that same using declaration.
-As a result, a program that didn’t intend to use the specified library name might encounter unexpected name conflicts.
+The reason is that the contents of a header are copied into the including
+program’s text: If a header has a using declaration, then every program that
+includes that header gets that same using declaration. As a result, a program
+that didn’t intend to use the specified library name might encounter unexpected
+name conflicts.
 
 Always use fully qualified names in a header file.
 */
@@ -47,8 +51,7 @@ void compareInputs();
 
 void typeInference();
 void templateFunctions();
-template <typename T>
-T getMax(T a, T b);
+template <typename T> T getMax(T a, T b);
 
 void pointerBasics();
 void referenceBasics();
@@ -60,6 +63,8 @@ void increment_ref(int &arg);
 double *createAndPassBack(int size);
 int *returnTheAddressOfALocal();
 void functionPointerBasics();
+
+void destructionBasics();
 
 void enumBasics();
 void printEnum(Day d);
@@ -75,3 +80,4 @@ void printArray_v1(int cnt, int arg[]);
 void printArray_v2(int cnt, int *arg);
 
 int binarySearch(int *arr, int cnt, int arg);
+void heapBasics();
