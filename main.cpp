@@ -373,11 +373,9 @@ int main()
 
     // templateFunctions();
 
-    // const int N = 9;
-    // int searchBase[N] = {10, 20, 30, 40, 50, 60, 70, 80, 90};
-    // int found = binarySearch(searchBase, N, 10);
+    searchBasics();
 
-    heapBasics();
+    // heapBasics();
 
     return 0;
 }
