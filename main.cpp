@@ -361,7 +361,7 @@ int main()
     // cout << "getMax(33, 55, 44): " << getMax(33, 55, 44) << endl;
 
     // pointerBasics();
-    referenceBasics();
+    // referenceBasics();
     // classBasics();
     // inheritanceBasics();
 
@@ -376,6 +376,8 @@ int main()
     // searchBasics();
 
     // heapBasics();
+
+    exceptionBasics();
 
     return 0;
 }
