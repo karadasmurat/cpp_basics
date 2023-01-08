@@ -362,7 +362,7 @@ int main()
 
     // pointerBasics();
     // referenceBasics();
-    // classBasics();
+    classBasics();
     // inheritanceBasics();
 
     // enumBasics();
@@ -377,7 +377,7 @@ int main()
 
     // heapBasics();
 
-    exceptionBasics();
+    // exceptionBasics();
 
     return 0;
 }
@@ -433,7 +433,7 @@ void classBasics()
     Box box1(10);
     box1.addItems(2);
     box1.addItems(3);
-    cout << "Box: " << box1.getSize() << " / " << box1.getCapacity() << endl;
+    cout << box1.toString() << endl;
 
     const Box box2(100); // const object
 
@@ -442,6 +442,11 @@ void classBasics()
     cout << box2;
 
     // operator overloading, member function
+    cout << "Prefix and Postfix Increment Operator\n";
+    cout << box1.toString();     // size:5
+    cout << (box1++).toString(); // size:5 - postfix returns the value before increment
+    cout << (++box1).toString(); // size:7
+
     // mkdomain::Box::operator+
     Box box3 = box2 + box1;
     cout << "box2 + box1: " << box3;
