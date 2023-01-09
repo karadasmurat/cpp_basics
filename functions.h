@@ -48,6 +48,7 @@ void getUserInputStr();
 void addInputNumbers();
 int sumAllInputs();
 void compareInputs();
+void iteratorBasics();
 
 void typeInference();
 void templateFunctions();
