@@ -1,13 +1,13 @@
 #include "domain.h"
 #include <iostream>
 
-using namespace mkdomain;
+using namespace mk;
 using namespace std;
 
-namespace mkdomain
+namespace mk
 {
 // constructor \w member initializer
-Box::Box(int cap) : capacity(cap)
+Box::Box(int cap) : capacity(cap), size(0)
 {
 }
 
@@ -56,6 +56,11 @@ Box Box::operator+(const Box &other) const
     return Box(capacity + other.getCapacity());
 }
 
+/*
+Since the std::string class has the move constructor, returning even the long strings by value is efficient. If an
+object has a move constructor, it’s said to be characterized with move-semantics. Move-semantics imply that the object
+is not copied to a different location on function return, thus, providing faster function execution time.
+*/
 string Box::toString() const
 {
     return "Box{\"capacity\":" + std::to_string(capacity) + ", \"size\":" + std::to_string(size) + "}\n";
@@ -79,8 +84,8 @@ Box operator-(const Box &left, const Box &right)
 // The overloaded operator returns a reference to the original ostream object, which means you can combine insertions
 ostream &operator<<(ostream &os, const Box &box)
 {
-    os << box.toString() << endl;
-    return os;
+    return os << box.toString() << endl;
+    // return os;
 }
 
 // DEFINITION into .cpp source file.
@@ -101,7 +106,7 @@ Entity::~Entity()
 {
     cout << "Destruct Entity obj " << e_name << endl;
 }
-} // namespace mkdomain
+} // namespace mk
   /*
   #include <iostream>
   

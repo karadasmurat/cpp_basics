@@ -1,8 +1,10 @@
 #MK
 .DS_Store
-# .vscode/   #tasks.json - build config, launch.json debug config
-main.dSYM
+*.dSYM/
+*.i
 main
+
+# .vscode/   #tasks.json - build config, launch.json debug config
 
 # Prerequisites
 *.d

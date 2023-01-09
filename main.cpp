@@ -121,12 +121,14 @@ controlled text
     // using directive for "all the identifiers" in the namespace
     ;
 
-using namespace std;
-using namespace mkdomain;
+// using namespace std;
+using namespace mk;
 
 // using declaration for a single identifier:
-// using std::cin;
-// using std::cout;
+using std::cin;
+using std::cout;
+using std::endl;
+using std::string;
 
 /*
     A "type alias" is a name that is a synonym for another type.
@@ -204,7 +206,7 @@ class B
 
     string toString()
     {
-        return "B{x:" + to_string(x) + "}\n";
+        return "B{x:" + std::to_string(x) + "}\n";
     }
 };
 
@@ -369,7 +371,7 @@ int main()
 
     // destructionBasics();
 
-    // functionPointerBasics();
+    functionPointerBasics();
 
     // templateFunctions();
 
@@ -379,7 +381,7 @@ int main()
 
     // exceptionBasics();
 
-    iteratorBasics();
+    // iteratorBasics();
 
     return 0;
 }

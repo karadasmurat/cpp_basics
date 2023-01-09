@@ -56,8 +56,10 @@ template <typename T> T getMax(T a, T b);
 
 void pointerBasics();
 void referenceBasics();
+void mayModifyArgument(mk::Box &b);
+void doNotModifyArgument(const mk::Box &b);
 void pointerToAPointer();
-void checkParams(mkdomain::Box *b);
+void checkParams(mk::Box *b);
 int increment(int arg);
 void increment_ptr(int *ptr);
 void increment_ref(int &ref);
@@ -67,6 +69,7 @@ double *createAndPassBack(int size);
 int *returnTheAddressOfALocal();
 void functionPointerBasics();
 
+void incrementAllBoxes(std::vector<mk::Box> &boxes, void *f(mk::Box &));
 void destructionBasics();
 
 void enumBasics();

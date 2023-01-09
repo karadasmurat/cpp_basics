@@ -1,3 +1,4 @@
+#include "domain.h"
 #include "functions.h"
 #include <iomanip> // std::setprecision
 #include <iostream>
@@ -213,7 +214,7 @@ void arrayBasics()
     int myArray[10];
 
     // declare an array of Entity objects
-    mkdomain::Entity entities[5]; // calls the default constructor 5 times
+    mk::Entity entities[5]; // calls the default constructor 5 times
 
     // all elements initialized to 0
     int scores[5] = {};
@@ -302,7 +303,6 @@ you cant dereference pointer and mutate the value that is pointed!
 */
 void constBasics()
 {
-
     int value = 11;
 
     // variation 1
@@ -342,19 +342,30 @@ void constBasics()
     // ptr4 = &other_value; //ERR
     // *ptr4 = 444; // ERR read only var
     // simplePrint(ptr4);
+
+    mk::Box box1{10};
+    const mk::Box box2{10};
+
+    mayModifyArgument(box1); // OK
+    // ERR: We cannot bind a plain reference to a const object.
+    // Remember: If we see an argument passed by non-const reference,
+    // we must assume that the called function will modify that argument.
+    // mayModifyArgument(box2);
+
+    doNotModifyArgument(box1); // OK
+    doNotModifyArgument(box2); // OK
 }
 
 void inputBasics()
 {
-
     getUserInputStr();
     // addInputNumbers();
     // sumAllInputs();
     // compareInputs();
 }
+
 void getUserInputStr()
 {
-
     // read from s into x
     // s >> x
 
@@ -392,7 +403,6 @@ void getUserInputStr()
 }
 int sumAllInputs()
 {
-
     int sum{0}, value{0};
     cout << "Enter numbers "
          << "\n[Q]uit and display the sum >";
@@ -415,7 +425,6 @@ int sumAllInputs()
 
 void addInputNumbers()
 {
-
     int x, y;
 
     cout << "Enter 2 numbers, seperated by space: ";
@@ -429,11 +438,9 @@ void addInputNumbers()
 }
 void compareInputs()
 {
-
     int x, y;
 
-    cout << "Enter two integers"
-         << "\nPress | to exit): ";
+    cout << "Enter two integers\nPress | to exit): ";
     while (cin >> x >> y)
     {
         if (x == '|')

@@ -65,7 +65,7 @@
 #include "functions.h"
 
 using namespace std;
-using namespace mkdomain;
+using namespace mk;
 
 void checkParams(Box *b)
 {
@@ -405,6 +405,15 @@ what's happening? Using Callback functions! The user's click should cause the
 interface to call a function that you wrote to handle the event.
 
 Function Pointer Syntax
+
+Let's have a simple function foo:
+
+    int foo (int x) { return 2+x; }
+
+A function pointer type has the notation:
+
+    int (*fptr)(int)
+
 The key to writing the declaration for a function pointer is that you're just
 writing out the declaration of a function but with (*func_name) where you'd
 normally just put func_name. For example:
@@ -415,7 +424,22 @@ normally just put func_name. For example:
 
 Invoke the function pointed to just as if you were calling a function.
 
-    f(n);
+now we can use f in the function decleration:
+
+    processEvent( void (*f)(int) ){
+        ...
+        f(n);
+        ...
+    }
+
+typedef is a language construct that associates a name to a type.
+It can be used ease the reading of the code - especially for pointers to functions, or structure names.
+
+    typedef void callback(int);     // like normal function decleration syntax. "callback" is now a typename.
+
+now we can use f in the function decleration:
+    processEvent( callback f ){ ... f(n); ... }
+
 
 Function pointers provide a way of passing around instructions for how to do
 something. You can write flexible functions and libraries that allow the
@@ -423,19 +447,61 @@ programmer to choose behavior by passing function pointers as arguments
 
 */
 
-void loopAndCallBack(vector<int> &v, void (*f)(int))
+typedef void callback(int); // typename is now "callback"
+
+// void loopAndCallBack(vector<int> &v, void (*f)(int))
+void loopAndCallBack(const vector<int> &v, callback myHandler) // typedef
 {
     for (int n : v)
     {
         // execute callback - with related parameters!
-        f(n);
+        myHandler(n);
     }
+}
+
+void incrementAllBoxes(vector<Box> &boxes, void (*f)(mk::Box &))
+{
+    for (Box &b : boxes)
+    {
+        // execute callback - with related parameters!
+        f(b);
+    }
+}
+
+void sampleHandler()
+{
+    cout << "Handler is called";
+}
+
+void process(void (*f)())
+{
+    // do some stuff
+    f(); // callback
+    // do some more stuff
 }
 
 void functionPointerBasics()
 {
+
+    process(sampleHandler);
+
     vector<int> nums{1, 2, 3, 4, 5};
     loopAndCallBack(nums, simplePrint);
+
+    vector<Box> boxes;
+    for (int i = 0; i < 5; i++)
+    {
+        Box b{i};
+        boxes.push_back(b);
+        cout << b.toString();
+    }
+
+    incrementAllBoxes(boxes, mayModifyArgument);
+
+    for (const Box &b : boxes)
+    {
+        cout << b.toString();
+    }
 }
 
 void referenceBasics()
@@ -509,6 +575,20 @@ void referenceBasics()
     int o_min, o_max;
     min_max(o_min, o_max, 333, 11);
     cout << "Min:\t" << o_min << "\nMax:\t" << o_max << endl;
+}
+
+// Remember: If we see an argument passed by non-const reference,
+// we must assume that the called function will modify that argument.
+void mayModifyArgument(mk::Box &b)
+{
+    cout << __func__ << endl;
+    ++b;
+}
+
+// Remember: Use pass-by-const-reference to pass large objects that you don’t need to modify.
+void doNotModifyArgument(const mk::Box &b)
+{
+    cout << __func__ << endl;
 }
 
 void modifyValue(int &arg)

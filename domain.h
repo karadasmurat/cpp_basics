@@ -8,7 +8,7 @@
 // using std::ostream;
 // using std::string;
 
-namespace mkdomain
+namespace mk
 {
 
 class Box
@@ -60,7 +60,6 @@ std::ostream &operator<<(std::ostream &os, const Box &box);
 
 class Entity
 {
-
     std::string e_name;
     int e_size;
 
@@ -87,4 +86,4 @@ class Entity
 
 }; // class Entity
 
-} // namespace mkdomain
+} // namespace mk
