@@ -58,6 +58,7 @@ In C, the usual convention is to give header files names that end with .h
 #include "functions.h"
 #include "mk_datastructures.h"
 #include <iostream>
+#include <math.h>
 #include <vector>
 
 /*
@@ -137,14 +138,13 @@ using std::string;
 
     Traditionally, we use a typedef. The new standard introduced a second way to
    define a type alias, via an alias declaration: using identifier = type;
+   */
 
-        // C++11
-        using counter = long;
+// C++11
+// using counter = long;
 
-        // C++03 equivalent:
-        typedef long counter;
-
-*/
+// C++03 equivalent:
+// typedef long counter;
 
 void macroBasics();
 void classBasics();
@@ -223,7 +223,7 @@ class NoCopy
 class ResourceOnHeap
 {
   private:
-    int *array; // pointer to an array of 10 integers
+    int *array; // pointer to an array
 
   public:
     ResourceOnHeap()
@@ -248,13 +248,23 @@ class Shape2D
 {
 
   public:
-    double area();
+    // An abstract class contains at least one pure virtual function. You declare a pure virtual function by using a
+    // pure specifier(= 0) in the declaration of a virtual member function in the class declaration.
+    virtual double area() = 0;
     double perimeter();
 
     void info()
     {
         cout << "This is Shape2D\n";
     }
+
+    // The base class defines as virtual those functions it expects its derived classes to override.
+    // A base class specifies that a member function should be dynamically bound
+    // by preceding its declaration with the keyword "virtual"
+    // Member functions that are not declared as virtual are resolved at compile time, not run time.
+    // Derived classes frequently, but not always, override the virtual functions that they inherit.
+    // If a derived class does not override a virtual from its base, then, like any other member,
+    // the derived class inherits the version defined in its base class.
 
     virtual void draw()
     {
@@ -274,16 +284,30 @@ class Circle : public Shape2D
     double radius;
 
   public:
-    void info()
+    Circle(double r) : radius(r)
     {
-        cout << "This is Circle\n";
     }
 
-    // we have a virtual function in the base class and it is being overridden in
-    // the derived class
+    void info()
+    {
+        cout << "This is Circle with radius: " << radius << "\n";
+    }
+
+    // A function that is declared as virtual in the base class is implicitly virtual in the derived classes as well.
+    // The new standard lets a derived class explicitly note that it intends a member function to override a virtual
+    // that it inherits. It does so by specifying override after the parameter list
+
     void draw() override
     {
         cout << "Drawing a Circle" << endl;
+    }
+
+    // override pure virtual function of the base.
+    double area() override
+    {
+        double a = radius * radius * M_PI;
+        cout << "Area: " << a << endl;
+        return a;
     }
 };
 
@@ -352,7 +376,7 @@ int main()
     // macroBasics();
 
     // variableBasics();
-    // stringBasics();
+    stringBasics();
     // arrayBasics();
     // constBasics();
 
@@ -371,7 +395,7 @@ int main()
 
     // destructionBasics();
 
-    functionPointerBasics();
+    // functionPointerBasics();
 
     // templateFunctions();
 
@@ -411,6 +435,24 @@ void macroBasics()
 #endif
 }
 
+/*
+In C++ we use classes to define our own data types.
+By defining types that mirror concepts in the problems we are trying to solve,
+we can make our programs easier to write, debug, and modify.
+
+“The fundamental ideas behind classes are data abstraction and encapsulation.
+Data abstraction is a programming (and design) technique that relies on the separation of interface and implementation.
+
+The interface of a class consists of the operations that users of the class can execute. The implementation includes the
+class’ data members, the bodies of the functions that constitute the interface, and any functions needed to define the
+class that are not intended for general use.
+
+
+A well-designed class has an interface that is intuitive and easy to use and
+has an implementation that is efficient enough for its intended use.
+
+
+*/
 void classBasics()
 {
 
@@ -486,22 +528,25 @@ void classBasics()
 
 void inheritanceBasics()
 {
+    // You can't declare an object of an abstract class.
+    // Shape2D s1;
+    // s1.info();
 
-    Shape2D s1;
-    s1.info();
-
-    Circle c1;
+    Circle c1(10);
     c1.info();
     c1.draw();
-    // c1.area(); // undefined reference!
+    c1.area();
 
     // Runtime polymorphism is achieved only through a pointer (or reference) of
     // base class type. A base class pointer can point to the objects of base
     // class as well as to the objects of derived class:
-    Shape2D *sPtr = &c1;
-    sPtr->info(); // shape, non-virtual
-    sPtr->draw(); // circle, virtual
 
+    cout << "Calling methods through a pointer to a base class, which is assigned a circle address\n";
+    Shape2D *sPtr = &c1;
+    sPtr->info(); // "This is Shape2D"  - non-virtual
+    sPtr->draw(); // "Drawing a Circle" - virtual
+
+    cout << "Calling methods through a reference to a base class, which is assigned a circle\n";
     Shape2D &sRef = c1;
     sRef.info(); // shape, not virtual
     sRef.draw(); // circle, virtual

@@ -127,6 +127,84 @@ void variableBasics()
 void stringBasics()
 {
 
+    // C Language does not support strings out of the box.
+    // Instead of strings, C uses an array of single characters.
+
+    // initialize using double quotes
+    // Option 1: square braces []
+
+    // this actually is
+    // char name[6] = {'M','u','r','a','t','\0'};
+    // so 6 element array is used to store 5 charecter string.
+    // char name[5] = "Murat"; // ERR - a value of type const char[6] cannot be used to init an entity of type char[5]
+    char name[] = "Murat";
+
+    // Option 2: USING A POINTER *
+    // string literals are designed to be constant, stored in read-only memory
+    // const modifier means that your compiler will complain if you try to modify an array with that particular
+    // variable.
+    const char *surname = "Karadas";
+
+    // string.h functions
+    // C supports a wide range of functions that manipulate null-terminated strings
+    char episode1[25] = "The Phantom Menace";
+    char episode2[25] = "Attack of the Clones";
+    char episode3[25] = "Revenge of the Sith";
+    const char *episode4 = "Star Wars";
+    const char *episode5 = "The Empire Strikes Back";
+    const char *episode6 = "Return of the Jedi";
+
+    // name of an array is a pointer to (address of) first element, so access first element by dereferencing the name
+    cout << "*episode1: " << *episode1 << endl;               // T
+    cout << "episode1: " << episode1 << endl;                 // The Phantom Menace
+    cout << "strlen(episode1): " << strlen(episode1) << endl; // 18 (does not count '\0')
+    cout << "sizeof(episode1): " << sizeof(episode1) << endl; // 25 - array size: 25 * 1 bytes (char)
+
+    cout << "*episode4: " << *episode4 << endl;               // S
+    cout << "episode4: " << episode4 << endl;                 // Star Wars
+    cout << "strlen(episode4): " << strlen(episode4) << endl; // 9 (does not count '\0')
+    cout << "sizeof(episode4): " << sizeof(episode4) << endl; // 8 - pointer size!
+
+    /*
+    copy the string pointed by source (including the null character) to the destination.
+    episode1 = episode4
+    Note: the size of the destination string should be large enough to store the copied string.
+    */
+    strcpy(episode1, episode4); // episode1 is now "Star Wars"
+
+    /*
+    Copy block of memory
+    void * memcpy ( void * destination, const void * source, size_t n );
+    Copies "n" bytes from the location pointed to by source directly to destination, stops as soon as it reaches n
+    bytes.
+    */
+    memcpy(episode2, episode4, strlen(episode4) + 1); // episode2 is now "Star Wars"
+    cout << "memcpy(episode2, episode4, strlen(episode4) + 1)\n";
+    cout << "Length of episode4: " << strlen(episode4) << "\n";
+    cout << "episode2: " << episode2 << "\n";
+    cout << "episode4: " << episode4 << endl;
+
+    /* concatenates str1 and str2 */
+    strcat(episode1, " Episode I"); // episode1 is now "Star Wars Episode I"
+    cout << "strcat(episode1, ' Episode I ')\n";
+    cout << "episode1: " << episode1 << endl;
+
+    cout << "Length of episode4: " << strlen(episode4) << endl;
+
+    cout << "\nv1, Loop over a char* by dereferencing and then incrementing the pointer: " << endl;
+    while (*episode5)
+    {
+        cout << *episode5 << " ";
+        ++episode5; // be careful, modifying the pointer!
+    }
+
+    cout << "\nv2, Loop over a char* using index and then incrementing the index: " << endl;
+    size_t i = 0;
+    while (episode6[i])
+    {
+        cout << episode6[i++] << "_";
+    }
+
     // C++ has several different forms of initialization
 
     std::string s1;        // default initialization; empty string
