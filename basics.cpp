@@ -34,6 +34,30 @@ void simplePrint(const std::string &title, double arg)
     cout << title << ": " << arg << endl;
 }
 
+// Remember: An array does not know its size.
+void printArray_v1(int cnt, int arg[])
+{
+    cout << "Array contents: " << endl;
+    for (int i = 0; i < cnt; i++)
+    {
+        cout << arg[i];
+        if (i != cnt - 1)
+            cout << ", ";
+    }
+}
+
+void simplePrint(int cnt, int *arg)
+{
+    cout << "[";
+    for (int i = 0; i < cnt; i++)
+    {
+        if (i != 0)
+            cout << ", ";
+        cout << arg[i]; // access arbitrary element: [i]
+    }
+    cout << "]" << endl;
+}
+
 void variableBasics()
 {
 
@@ -132,11 +156,13 @@ void stringBasics()
 
     // initialize using double quotes
     // Option 1: square braces []
-
+    // An array of chars can be initialized with a string literal.
+    // the compiler adds a terminating zero character at the end of a string literal.
     // this actually is
     // char name[6] = {'M','u','r','a','t','\0'};
     // so 6 element array is used to store 5 charecter string.
-    // char name[5] = "Murat"; // ERR - a value of type const char[6] cannot be used to init an entity of type char[5]
+    // char name[5] = "Murat"; // ERR - a value of type const char[6] cannot be used to init an entity of type
+    // char[5]
     char name[] = "Murat";
 
     // Option 2: USING A POINTER *
@@ -147,6 +173,8 @@ void stringBasics()
 
     // string.h functions
     // C supports a wide range of functions that manipulate null-terminated strings
+    // Remember: An array does not know its size. Relying on the terminating zero
+    // convention, we can write strlen()
     char episode1[25] = "The Phantom Menace";
     char episode2[25] = "Attack of the Clones";
     char episode3[25] = "Revenge of the Sith";
@@ -286,71 +314,59 @@ void arrayBasics()
 
       char ch[100];
       sizeof(ch);     // 100 * 1byte
+
+    Access the pointer              : array_name        (pointer to the first element)
+    Copy the pointer (assign)       : T* p = array_name
+    Access element                  : *array_name       (first element)
+    Access random element           : array_name[n]
+    Move forward by arbitrary n     : array_name += n   (p += n)
+    Distance between two elements   : q - p
     */
 
     // In a declaration, an array is indicated by square brackets
-    int myArray[10];
+    // By default, regular arrays of primitives with local scope (i.e, those declared within a function) are left
+    // uninitialized.
+    int myArray[10];         // uninitilized
+    simplePrint(5, myArray); // garbage! like, [-421667480, 1, -421667480, 1, 1876948592]
 
-    // declare an array of Entity objects
-    mk::Entity entities[5]; // calls the default constructor 5 times
+    int scores[5] = {0}; // scores has type int[5] and holds all zeroes
+    int *p = scores;     // &scores[0]
 
-    // all elements initialized to 0
-    int scores[5] = {};
-    int *p = scores; // &scores[0]
-
-    cout << "int scores[5];" << endl;
-    cout << "scores: " << scores << endl;         // 0x...
-    cout << "&scores[0]: " << &scores[0] << endl; // same
-    cout << "scores[0]: " << scores[0] << endl;
-    cout << "sizeof(scores): " << sizeof(scores) << endl; // 5 * 4 bytes = 20
-    cout << "size of ptr: " << sizeof(p) << endl;         // 4 bytes
+    cout << "int scores[5] = {}\n";
+    cout << "scores         : " << scores << "\n";     // 0x...
+    cout << "&scores[0]     : " << &scores[0] << "\n"; // same
+    cout << "scores[0]      : " << scores[0] << "\n";
+    cout << "sizeof(scores) : " << sizeof(scores) << "\n"; // 5 * 4 bytes = 20
+    cout << "size of ptr    : " << sizeof(p) << endl;      // 4 bytes
 
     // printArray_v1(5, scores);
-    printArray_v2(5, scores);
+    simplePrint(5, scores);
 
     // arrays can be initialized by a list of values of their element type
     double areas[] = {1.0, 2.0, 3.0};
 
-    // An array of chars can be initialized with a string literal. “the compiler
-    // adds a terminating zero character at the end of a string literal. Remember:
-    // An array does not know its size. Relying on the terminating zero
-    // convention, we can write strlen()
+    // declare an array of Entity objects
+    // you would have to provide an initializer for each element of the array at the point where you define the array.
+    mk::Entity entities[5]; // calls the default constructor 5 times
 
-    // C style strings
-    // char *codePtr = "XYZ123";
-    char codeArr[] = "XYZ123";
+    // C Language does not support strings out of the box.
+    // Instead of strings, C uses an array of single characters.
 
-    // codePtr[0] = '_';
-    // codeArr[0] = '_';
+    // initialize using double quotes
+    // Option 1: square braces []
+    // An array of chars can be initialized with a string literal.
+    // this actually is
+    // char name[6] = {'M','u','r','a','t','\0'};
+    // so 6 element array is used to store 5 charecter string.
+    // char name[5] = "Murat"; // ERR - a value of type const char[6] cannot be used to init an entity of type
+    // char[5]
+    char name[] = "Murat";
 
-    // cout << "codePtr" << codePtr << endl;
-    cout << "codeArr" << codeArr << endl;
-
-    char name[] = {'A', 'l', 'b', 'u', 's'};
-}
-
-// Remember: An array does not know its size.
-void printArray_v1(int cnt, int arg[])
-{
-    cout << "Array contents: " << endl;
-    for (int i = 0; i < cnt; i++)
-    {
-        cout << arg[i];
-        if (i != cnt - 1)
-            cout << ", ";
-    }
-}
-
-void printArray_v2(int cnt, int *arg)
-{
-    cout << "Array contents: " << endl;
-    for (int i = 0; i < cnt; i++)
-    {
-        // dereference using []
-        cout << arg[i];
-        if (i != cnt - 1)
-            cout << ", ";
-    }
+    // Option 2: USING A POINTER *
+    // string literals are designed to be constant, stored in read-only memory
+    // const modifier means that your compiler will complain if you try to modify an array with that particular
+    // variable.
+    const char *surname = "Karadas";
 }
 
 /*
