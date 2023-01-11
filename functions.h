@@ -35,10 +35,11 @@ void helloWorld();
 void variableBasics();
 void stringBasics();
 void arrayBasics();
+void vectorBasics();
 void constBasics();
 
 int getBiggerOfTwo(int x, int y);
-int getMax(int x, int y, int z);
+template <typename T> const T &getMax(const T &a, const T &b);
 
 void modifyValue(int &arg);
 void min_max(int &min, int &max, int x, int y);
@@ -52,7 +53,6 @@ void iteratorBasics();
 
 void typeInference();
 void templateFunctions();
-template <typename T> T getMax(T a, T b);
 
 void pointerBasics();
 void referenceBasics();

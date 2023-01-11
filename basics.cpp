@@ -58,6 +58,27 @@ void simplePrint(int cnt, int *arg)
     cout << "]" << endl;
 }
 
+// “Pass-by-const-reference”
+void simplePrint(const std::vector<int> &vect)
+{
+    std::string separator;
+    cout << "\n[";
+    for (const auto &e : vect)
+    {
+        cout << separator << e;
+        separator = ", ";
+    }
+    cout << "]" << endl;
+
+    /* for (int i = 0; i < v.size(); i++) {
+       cout << "v[" << i << "]: " << v[i];
+       if (i != v.size() - 1)
+         cout << ", ";
+       else
+         cout << endl;
+     }*/
+}
+
 void variableBasics()
 {
 
@@ -369,6 +390,101 @@ void arrayBasics()
     const char *surname = "Karadas";
 }
 
+void vectorBasics()
+{
+    /*
+    An ArrayList could be a better name, maybe.
+    A vector provides a sequence of elements of a given type.
+
+    The elements are stored contiguously, which means that elements can be accessed not only through iterators, but
+    also using offsets to regular pointers to elements. This means that a pointer to an element of a vector may be
+    passed to any function that expects a pointer to an element of an array.
+
+    The storage of the vector is handled automatically, being expanded as needed. Vectors usually occupy more space
+    than static arrays, because more memory is allocated to handle future growth. This way a vector does not need to
+    reallocate each time an element is inserted, but only when the additional memory is exhausted. The total amount of
+    allocated memory can be queried using capacity() function. Extra memory can be returned to the system via a call to
+    shrink_to_fit().
+
+
+    The complexity (efficiency) of common operations on vectors is as follows:
+        * Random access - constant O(1)
+        * Insertion or removal of elements at the end - "amortized" constant O(1)
+        (each time the array is full, allocate new space, copy your data into the new region, and free old space.)
+        * Insertion or removal of elements - linear in the distance to the end of the vector O(n) (shifting)
+
+    A vector is the preferred container for a sequence when random-access performance is at a premium. (The list class
+    container is faster at insertions and deletions at any location within a sequence.)
+
+
+    Reallocations are usually costly operations in terms of performance. The reserve() function can be used to
+    eliminate reallocations if the number of elements is known beforehand.
+
+
+    You can refer to an element by its index (subscript), extend the vector by using push_back(),
+    ask a vector for the number of its elements using size()
+    */
+
+    // default constructor: Constructs an empty container, with no elements.
+    vector<int> v;
+
+    cout << "vector<int> v; //declare a vector\n";
+    if (v.empty())
+        cout << "Vector is empty.\n";
+    cout << " capacity() : " << v.capacity() << "\n"; // 0
+    cout << " size()     : " << v.size() << endl;     // 0
+
+    v.push_back(1);
+
+    cout << "push_back(1);\n";
+    cout << " capacity() : " << v.capacity() << "\n"; // 1
+    cout << " size()     : " << v.size() << endl;     // 1
+
+    cout << "For i = 100 To 150 push_back();\n";
+    for (int i = 100; i < 150; i++)
+        v.push_back(i);
+
+    cout << " capacity() : " << v.capacity() << "\n"; // 64
+    cout << " size()     : " << v.size() << endl;     // 51
+    // You can refer to an element by its index (subscript)
+    cout << " v[0]: " << v[0];
+    cout << " Last element: " << v[v.size() - 1];
+
+    // fill constructors
+    // Constructs a container with n elements. Each element is a copy of val(if provided)
+    vector<int> vect2(5); // create a vector of 5 integers with default value of 0
+    simplePrint(vect2);
+    std::vector<int> vect3(5, 10); // create a vector of 5 integers with value 10
+    simplePrint(vect3);
+
+    // Initialize like an array
+    vector<double> ages = {0.33, 22.0, 27.2};
+    ages[2] = 22.2;
+
+    // declare
+    vector<mk::Box> boxes1(5);
+    cout << "boxes1.size() : " << boxes1.size() << endl;
+    vector<mk::Box> boxes2;
+    boxes2.reserve(5);
+    cout << "boxes2.size(): " << boxes2.size() << endl;
+
+    cout << "\n[";
+    // traverse using index
+    for (int i = 0; i < boxes1.size(); ++i)
+        cout << boxes1[i] << ' ';
+
+    cout << "]" << endl;
+
+    cout << "reserved: [";
+    // traverse using for each
+    for (const auto &box : boxes2)
+        cout << box << ' ';
+
+    cout << "]" << endl;
+
+    // loopBasics();
+}
+
 /*
 Use "const" keyword to prevent const objects from getting mutated.
 
@@ -561,13 +677,15 @@ Function templates are special functions that can operate with generic types.
 This allows us to create a function template whose functionality can be adapted
 to more than one type or class without repeating the entire code for each type.
 */
-template <typename T> T getMax(T a, T b)
+template <typename T> const T &getMax(const T &a, const T &b)
 {
     return a > b ? a : b;
 }
 
 void templateFunctions()
 {
+
+    std::cout << "smaller of 1 and 9999 is " << std::min(1, 9999) << '\n';
 
     int x{10}, y{20};
     double d1{10.0}, d2{20.0};
@@ -583,19 +701,6 @@ int getBiggerOfTwo(int x, int y)
 {
     return x > y ? x : y;
 }
-
-int getMax(int x, int y, int z)
-{
-
-    int max = x;
-    if (y > max)
-        max = y;
-    if (z > max)
-        max = z;
-
-    return max;
-}
-
 void iteratorBasics()
 {
     cout << "Iterator Basics\n";
