@@ -376,8 +376,9 @@ int main()
     // macroBasics();
 
     // variableBasics();
-    stringBasics();
+    // stringBasics();
     // arrayBasics();
+    // vectorBasics();
     // constBasics();
 
     // inputBasics();
@@ -396,6 +397,7 @@ int main()
     // destructionBasics();
 
     // functionPointerBasics();
+    lambdaBasics();
 
     // templateFunctions();
 

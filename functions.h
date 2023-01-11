@@ -68,8 +68,8 @@ void print_refToNonConst(std::string &s);
 double *createAndPassBack(int size);
 int *returnTheAddressOfALocal();
 void functionPointerBasics();
-
-void incrementAllBoxes(std::vector<mk::Box> &boxes, void *f(mk::Box &));
+void lambdaBasics();
+// void incrementAllBoxes(std::vector<mk::Box> &boxes, void *f(mk::Box &));
 void destructionBasics();
 
 void enumBasics();
@@ -77,12 +77,13 @@ void printEnum(Day d);
 
 void simplePrint(int arg);
 void simplePrint(double arg);
-void simplePrint(int *p);
+template <typename T> void simplePrint(T *p);
 void simplePrint(const int *p);
 void simplePrint(const std::string &title, int arg);
 void simplePrint(const std::string &title, double arg);
 void simplePrint(int cnt, int *arg);
 void printArray_v1(int cnt, int arg[]);
+template <typename T> void simplePrint(T *begin, T *end); // print array using iterator logic
 
 void searchBasics();
 int binarySearch(int *arr, int cnt, int arg);
