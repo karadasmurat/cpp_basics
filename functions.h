@@ -38,6 +38,8 @@ void arrayBasics();
 void vectorBasics();
 void constBasics();
 
+template <typename T> void traverseVector(const std::vector<T> &vect);
+
 int getBiggerOfTwo(int x, int y);
 template <typename T> const T &getMax(const T &a, const T &b);
 
@@ -84,6 +86,7 @@ void simplePrint(const std::string &title, double arg);
 void simplePrint(int cnt, int *arg);
 void printArray_v1(int cnt, int arg[]);
 template <typename T> void simplePrint(T *begin, T *end); // print array using iterator logic
+void printTitle(const std::string &title);
 
 void searchBasics();
 int binarySearch(int *arr, int cnt, int arg);

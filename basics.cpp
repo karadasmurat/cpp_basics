@@ -5,6 +5,10 @@
 
 using namespace std;
 
+void printTitle(const std::string &title)
+{
+    cout << "\n---------- " << title << " ----------\n\n";
+}
 void simplePrint(int arg)
 {
     cout << arg << endl;
@@ -15,7 +19,7 @@ void simplePrint(double arg)
     std::cout << std::fixed << std::setprecision(2) << arg << endl;
 }
 
-void simplePrint(int *p)
+template <typename T> void simplePrint(T *p)
 {
     cout << "ptr: " << p << ", *ptr: " << *p << endl;
 }
@@ -54,6 +58,21 @@ void simplePrint(int cnt, int *arg)
         if (i != 0)
             cout << ", ";
         cout << arg[i]; // access arbitrary element: [i]
+    }
+    cout << "]" << endl;
+}
+
+// print an array using iterator logic
+template <typename T> void simplePrint(T *begin, T *end)
+{
+    cout << "[";
+    int i = 0; // just for the comma seperation
+    while (begin != end)
+    {
+        if (i != 0)
+            cout << ", ";
+        cout << *begin++; // dereference iterator and then increment
+        i++;
     }
     cout << "]" << endl;
 }
@@ -388,49 +407,79 @@ void arrayBasics()
     // const modifier means that your compiler will complain if you try to modify an array with that particular
     // variable.
     const char *surname = "Karadas";
+
+    // stl algorithms
+    const int SIZE = 7;
+    double weights[SIZE] = {71.0, 82.5, 63.0, 57.9, 66.2, 103.8, 58.0};
+
+    // begin is weights, or &weights[0]
+    // end is 1 past last, which is weights+SIZE, or &weights[SIZE]
+    // array size is: end - begin (index starts at 0)
+    std::sort(weights, weights + SIZE);
+    simplePrint(weights, weights + SIZE);
 }
 
 void vectorBasics()
 {
+    printTitle("Vector Basics");
+
     /*
     An ArrayList could be a better name, maybe.
-    A vector provides a sequence of elements of a given type.
+    Vectors are sequence containers representing arrays that can change in size.
 
-    The elements are stored contiguously, which means that elements can be accessed not only through iterators, but
-    also using offsets to regular pointers to elements. This means that a pointer to an element of a vector may be
-    passed to any function that expects a pointer to an element of an array.
+    Just like arrays, vectors use contiguous storage locations for their elements, which means that their elements
+    can also be accessed using offsets on regular pointers to its elements, and just as efficiently as in arrays.
+
+    The elements are stored contiguously, which means that elements can be accessed not only through iterators, but also
+    using offsets to regular pointers to elements. This means that a pointer to an element of a vector may be passed to
+    any function that expects a pointer to an element of an array.
 
     The storage of the vector is handled automatically, being expanded as needed. Vectors usually occupy more space
     than static arrays, because more memory is allocated to handle future growth. This way a vector does not need to
-    reallocate each time an element is inserted, but only when the additional memory is exhausted. The total amount of
-    allocated memory can be queried using capacity() function. Extra memory can be returned to the system via a call to
-    shrink_to_fit().
+    reallocate each time an element is inserted, but only when the additional memory is exhausted. (thus the container
+    may have an actual capacity() greater than the storage strictly needed to contain its elements (i.e., its size())
+
+    Libraries can implement different strategies for growth to balance between memory usage and reallocations, but
+    in any case, reallocations should only happen at "logarithmically growing intervals of size" so that the insertion
+    of individual elements at the end of the vector can be provided with "amortized" constant time complexity (see
+    push_back).
+
+    Therefore, compared to arrays, vectors consume more memory in exchange for the ability to manage storage and grow
+    dynamically in an efficient way. Extra memory can be returned to the system via a call to shrink_to_fit().
 
 
     The complexity (efficiency) of common operations on vectors is as follows:
+
         * Random access - constant O(1)
         * Insertion or removal of elements at the end - "amortized" constant O(1)
-        (each time the array is full, allocate new space, copy your data into the new region, and free old space.)
+            (each time the array is full, allocate new space, copy your data into the new region, and free old space.)
         * Insertion or removal of elements - linear in the distance to the end of the vector O(n) (shifting)
 
-    A vector is the preferred container for a sequence when random-access performance is at a premium. (The list class
-    container is faster at insertions and deletions at any location within a sequence.)
+    Compared to the other dynamic sequence containers (deques, lists and forward_lists), vectors are very efficient
+    accessing its elements (just like arrays) and relatively efficient adding or removing elements from its end. For
+    operations that involve inserting or removing elements at positions other than the end, they perform worse than the
+    others, and have less consistent iterators and references than lists and forward_lists. A vector is the preferred
+    container for a sequence when random-access performance is at a premium.
 
 
-    Reallocations are usually costly operations in terms of performance. The reserve() function can be used to
-    eliminate reallocations if the number of elements is known beforehand.
-
+    Reallocations are usually costly operations in terms of performance. The reserve() function can be used to eliminate
+    reallocations if the number of elements is known beforehand.
 
     You can refer to an element by its index (subscript), extend the vector by using push_back(),
     ask a vector for the number of its elements using size()
+
+    Note. vector is a template, not a type. We can define vectors to hold objects of most any type.
+    Types generated from vector must include the element type, for example, vector<int>
+
+
     */
 
-    // default constructor: Constructs an empty container, with no elements.
+    // Default initialize a vector, which creates an empty vector of the specified type
     vector<int> v;
 
-    cout << "vector<int> v; //declare a vector\n";
     if (v.empty())
-        cout << "Vector is empty.\n";
+        cout << "Default initialized vector is empty.\n";
+
     cout << " capacity() : " << v.capacity() << "\n"; // 0
     cout << " size()     : " << v.size() << endl;     // 0
 
@@ -440,12 +489,18 @@ void vectorBasics()
     cout << " capacity() : " << v.capacity() << "\n"; // 1
     cout << " size()     : " << v.size() << endl;     // 1
 
-    cout << "For i = 100 To 150 push_back();\n";
-    for (int i = 100; i < 150; i++)
+    cout << "For i = 2 To 100 push_back(i);\n";
+    int prev_capacity = v.capacity();
+    for (int i = 2; i < 100; i++)
+    {
         v.push_back(i);
+        if (v.capacity() - prev_capacity > 1)
+            cout << "Reallocation - capacity is now " << v.capacity() << " from " << prev_capacity
+                 << ", size: " << v.size() << "\n";
 
-    cout << " capacity() : " << v.capacity() << "\n"; // 64
-    cout << " size()     : " << v.size() << endl;     // 51
+        prev_capacity = v.capacity();
+    }
+
     // You can refer to an element by its index (subscript)
     cout << " v[0]: " << v[0];
     cout << " Last element: " << v[v.size() - 1];
@@ -457,32 +512,44 @@ void vectorBasics()
     std::vector<int> vect3(5, 10); // create a vector of 5 integers with value 10
     simplePrint(vect3);
 
-    // Initialize like an array
+    // initializer list
     vector<double> ages = {0.33, 22.0, 27.2};
     ages[2] = 22.2;
 
-    // declare
-    vector<mk::Box> boxes1(5);
+    vector<mk::Box> boxes1(5); // fill with objects
     cout << "boxes1.size() : " << boxes1.size() << endl;
-    vector<mk::Box> boxes2;
-    boxes2.reserve(5);
+
+    vector<mk::Box> boxes2; // default initialize, empty vector
+    boxes2.reserve(5);      // prevent reallocation if you know the size, ie., capacity 0 -> 1 -> 2 -> 4 ..
+    cout << "boxes2.capacity(): " << boxes2.capacity() << endl;
     cout << "boxes2.size(): " << boxes2.size() << endl;
 
-    cout << "\n[";
+    traverseVector(boxes1);
+}
+template <typename T> void traverseVector(const vector<T> &vect)
+{
+    printTitle("Traverse a Vector");
+
+    cout << "\nindex[";
     // traverse using index
-    for (int i = 0; i < boxes1.size(); ++i)
-        cout << boxes1[i] << ' ';
+    for (int i = 0; i < vect.size(); ++i)
+        cout << vect[i] << ' ';
 
     cout << "]" << endl;
 
-    cout << "reserved: [";
+    cout << "\niterator[";
+    // traverse using iterator
+    for (auto it = vect.begin(); it != vect.end(); ++it)
+        cout << *it << ' ';
+
+    cout << "]" << endl;
+
+    cout << "foreach[";
     // traverse using for each
-    for (const auto &box : boxes2)
-        cout << box << ' ';
+    for (const auto &item : vect)
+        cout << item << ' ';
 
     cout << "]" << endl;
-
-    // loopBasics();
 }
 
 /*
@@ -688,7 +755,7 @@ void templateFunctions()
     std::cout << "smaller of 1 and 9999 is " << std::min(1, 9999) << '\n';
 
     int x{10}, y{20};
-    double d1{10.0}, d2{20.0};
+    double d1{33.3}, d2{22.2};
 
     int max_i = getMax(x, y);
     double max_d = getMax(d1, d2);
@@ -701,16 +768,38 @@ int getBiggerOfTwo(int x, int y)
 {
     return x > y ? x : y;
 }
+/*
+Like pointers, iterators give us indirect access to an object.
+Unlike pointers, we do not use the address-of operator to obtain an iterator. Instead, types that have iterators have
+members that return iterators. In particular, the begin member returns an iterator that denotes the first element (or
+first character), if there is one.
+
+The iterator returned by end() is an iterator positioned “one past the end” of the associated container (or string).
+If the container is empty, the iterators returned by begin and end are equal—they are "both off-the-end" iterators.
+
+If the object is const, then begin and end return a const_iterator.
+if the object is not const, they return iterator.
+
+Any operation, such as push_back, that changes the size of a vector potentially invalidates all iterators into that
+vector.
+
+*/
 void iteratorBasics()
 {
-    cout << "Iterator Basics\n";
+    printTitle("Iterator Basics");
 
     int numArr[] = {10, 20, 30, 40, 50};
     vector<int> numVect{100, 200, 300, 400, 500};
 
     cout << "Iterate an array using std::begin() and std::end() and dereferencing\n";
+
+    // In general, we do not know (or care about) the precise type that an iterator has.
+    // In this example, we used auto to define it
+    // Iterators use the increment (++) operator to move from one element to the next.
     for (auto it = begin(numArr); it != end(numArr); it++)
     {
+        // As with pointers, we can dereference an iterator to obtain the element denoted by an iterator.
+        // Note that “Dereferencing an invalid iterator or an off-the-end iterator has undefined behavior.
         cout << *it << " ";
     }
 
@@ -720,4 +809,44 @@ void iteratorBasics()
         cout << *it << " ";
     }
     cout << endl;
+
+    vector<mk::Entity> entities;
+    entities.reserve(3); // prevent reallocation if you know the size, ie., capacity 0 -> 1 -> 2 -> 4 ..
+    entities.emplace_back(mk::Entity("E1", 1));
+    entities.emplace_back(mk::Entity("E2", 2));
+    entities.emplace_back(mk::Entity("E3", 3));
+
+    vector<mk::Entity>::const_iterator it = entities.cbegin();
+    while (it != entities.cend())
+    {
+        if (!(*it).getName().empty())
+        {
+            cout << (*it).getName(); // parantheses are necessary here.
+            cout << it->getName(); // The arrow operator combines dereference and member access into a single operation
+        }
+
+        ++it;
+    }
+
+    // compute an iterator to the element closest to the midpoint
+    // We can add (or subtract) an integral value and an iterator.
+    auto mid = entities.begin() + (entities.size() / 2);
+    cout << "\nvector midpoint: " << mid->getName() << endl;
+
+    // We can also subtract two iterators
+    // so long as they refer to elements in, or one off the end of, the same vector or string.
+    std::string text = "abcdefghi";
+    auto beg = text.begin(), end = text.end();
+    auto midpoint = beg + ((end - beg) / 2); // original midpoint
+    cout << "string midpoint: " << *midpoint << endl;
+
+    // begin is array_name, or &array_name[0]
+    // end is 1 past last, which is array_name+SIZE, or &array_name[SIZE]
+    // array size is: end - begin (index starts at 0)
+    std::sort(numArr, numArr + 5);
+    simplePrint(numArr, numArr + 5);
+
+    // If the object is const, then begin and end return a const_iterator.
+    const vector<int> cv;
+    auto it2 = cv.begin(); // it2 has type "vector<int>::const_iterator
 }

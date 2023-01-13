@@ -397,7 +397,7 @@ int main()
     // destructionBasics();
 
     // functionPointerBasics();
-    lambdaBasics();
+    // lambdaBasics();
 
     // templateFunctions();
 
@@ -407,7 +407,7 @@ int main()
 
     // exceptionBasics();
 
-    // iteratorBasics();
+    iteratorBasics();
 
     return 0;
 }

@@ -13,13 +13,19 @@ namespace mk
 
 class Box
 {
-    int capacity;
-    int size;
+    int capacity = 0;
+    int size = 0;
 
   public:
+    Box() = default;
+
     // constructor \w member initializer
     Box(int cap);
 
+    ~Box();
+
+    // Although every member must be declared inside its class,
+    // we can define a member function’s body either inside or outside of the class body.
     void addItems(int itemCount);
 
     // Declare prefix and postfix increment operators (as member function)
@@ -36,17 +42,24 @@ class Box
 
     std::string toString() const;
 
-    // const member: can't modify object
-    // "const" after argument list
+    // const member function: can't modify object - "const" follows parameter list
+    // The purpose of that const is to modify the type of the implicit this pointer.
+    // The fact that "this" is a pointer to const means that const member functions cannot change the object on
+    // which they are called.
+
     // can be called for a const object.
     int getCapacity() const
     {
+        // We do not need to use the implicit this pointer to access the members of the object on which a member
+        // function is executing: this->size;
         return capacity;
     }
 
-    // const member: can't modify object
+    // const member function: can't modify object
     int getSize() const
     {
+        // We do not need to use the implicit this pointer to access the members of the object on which a member
+        // function is executing: this->size;
         return size;
     }
 
@@ -60,11 +73,11 @@ std::ostream &operator<<(std::ostream &os, const Box &box);
 
 class Entity
 {
-    std::string e_name;
-    int e_size;
+    std::string e_name = "";
+    int e_size = 0;
 
   public:
-    Entity();
+    Entity() = default;
 
     // A default parameter is only used in the declaration.
     Entity(const std::string &n, int s = 1);
