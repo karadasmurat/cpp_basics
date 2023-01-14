@@ -378,7 +378,7 @@ int main()
     // variableBasics();
     // stringBasics();
     // arrayBasics();
-    // vectorBasics();
+    vectorBasics();
     // constBasics();
 
     // inputBasics();
@@ -407,7 +407,7 @@ int main()
 
     // exceptionBasics();
 
-    iteratorBasics();
+    // iteratorBasics();
 
     return 0;
 }
@@ -526,6 +526,20 @@ void classBasics()
 
     int *result = returnTheAddressOfALocal();
     cout << *result << endl;
+
+    Entity ent1("E1", 1);
+    Entity ent2("E2", 2);
+    Entity ent3("E11", 1);
+
+    if (ent1 == ent2)
+        cout << ent1 << " is equal to " << ent2 << endl;
+    else
+        cout << ent1 << " is NOT equal to " << ent2 << endl;
+
+    if (ent1 == ent3)
+        cout << ent1 << " is equal to " << ent3 << endl;
+    else
+        cout << ent1 << " is NOT equal to " << ent3 << endl;
 }
 
 void inheritanceBasics()

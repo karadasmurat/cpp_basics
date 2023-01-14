@@ -419,6 +419,23 @@ void arrayBasics()
     simplePrint(weights, weights + SIZE);
 }
 
+void listBasics()
+{
+    printTitle("List Basics");
+
+    /*
+    A container holds a collection of objects of a specified type.
+    The sequential containers let the programmer control the order (the position at which elements are put into the
+    container) in which the elements are stored and accessed.
+
+    The list and forward_list containers are designed to make it fast to add or remove an element anywhere in the
+    container. In exchange, these types do not support random access to elements: We can access an element only by
+    iterating through the container. Moreover, the memory overhead for these containers is often substantial, when
+    compared to vector, deque , and array.
+
+    */
+}
+
 void vectorBasics()
 {
     printTitle("Vector Basics");
@@ -429,6 +446,10 @@ void vectorBasics()
 
     Just like arrays, vectors use contiguous storage locations for their elements, which means that their elements
     can also be accessed using offsets on regular pointers to its elements, and just as efficiently as in arrays.
+
+    However, adding or removing elements in the middle of one of these containers takes time: All the elements after
+    the one inserted or removed have to be moved to maintain contiguity. Moreover, adding an element can sometimes
+    require that additional storage be allocated. In that case, every element must be moved into the new storage.
 
     The elements are stored contiguously, which means that elements can be accessed not only through iterators, but also
     using offsets to regular pointers to elements. This means that a pointer to an element of a vector may be passed to
@@ -444,7 +465,7 @@ void vectorBasics()
     of individual elements at the end of the vector can be provided with "amortized" constant time complexity (see
     push_back).
 
-    Therefore, compared to arrays, vectors consume more memory in exchange for the ability to manage storage and grow
+    Compared to arrays, vectors consume more memory in exchange for the ability to manage storage and grow
     dynamically in an efficient way. Extra memory can be returned to the system via a call to shrink_to_fit().
 
 
@@ -465,13 +486,18 @@ void vectorBasics()
     Reallocations are usually costly operations in terms of performance. The reserve() function can be used to eliminate
     reallocations if the number of elements is known beforehand.
 
-    You can refer to an element by its index (subscript), extend the vector by using push_back(),
-    ask a vector for the number of its elements using size()
+    When we use container operations that add or remove elements, it is essential to remember that these operations can
+    invalidate iterators, pointers, or references to elements in the container.
 
     Note. vector is a template, not a type. We can define vectors to hold objects of most any type.
     Types generated from vector must include the element type, for example, vector<int>
 
+    When we call a push or insert member, we pass objects of the element type and those objects are copied into the
+    container. When we call an "emplace" member, we pass arguments to a constructor for the element type. The emplace
+    members use those arguments to construct an element directly in space managed by the container.
 
+    The emplace functions construct elements in the container.
+    The arguments to these functions must match a constructor for the element type.
     */
 
     // Default initialize a vector, which creates an empty vector of the specified type
@@ -483,6 +509,8 @@ void vectorBasics()
     cout << " capacity() : " << v.capacity() << "\n"; // 0
     cout << " size()     : " << v.size() << endl;     // 0
 
+    // The call to push_back creates a new element at the end of container, increasing the size of container by 1.
+    // The value of that element is a "copy" of the element, not the element itself.
     v.push_back(1);
 
     cout << "push_back(1);\n";
@@ -501,14 +529,23 @@ void vectorBasics()
         prev_capacity = v.capacity();
     }
 
+    // Accessing Elements
     // You can refer to an element by its index (subscript)
-    cout << " v[0]: " << v[0];
-    cout << " Last element: " << v[v.size() - 1];
+    // check that there are elements before dereferencing an iterator or calling front or back
+    if (!v.empty())
+    {
+        cout << " v[0]: " << v[0] << endl;
+        cout << " front(): " << v.front() << endl;
+        cout << " at(0): " << v.at(0) << endl;
+        cout << " Last element: " << v[v.size() - 1] << endl;
+        cout << " back(): " << v.back() << endl;
+    }
 
     // fill constructors
     // Constructs a container with n elements. Each element is a copy of val(if provided)
     vector<int> vect2(5); // create a vector of 5 integers with default value of 0
     simplePrint(vect2);
+
     std::vector<int> vect3(5, 10); // create a vector of 5 integers with value 10
     simplePrint(vect3);
 
@@ -516,39 +553,116 @@ void vectorBasics()
     vector<double> ages = {0.33, 22.0, 27.2};
     ages[2] = 22.2;
 
-    vector<mk::Box> boxes1(5); // fill with objects
-    cout << "boxes1.size() : " << boxes1.size() << endl;
+    // We can use the constructor that takes a size argument if the element type is
+    // a built-in type or a class type that has a default constructor
+    vector<mk::Entity> entities(5); // fill with objects, default constructor
+    cout << "entities.size() : " << entities.size() << endl;
+
+    vector<mk::Entity> entities2;
+    entities2.reserve(2);
+
+    cout << "Create and push_back()\n";
+    mk::Entity e1{"E1", 1};  // initialize an Entity object
+    entities2.push_back(e1); // copy(!) existing object into the container
+
+    cout << "emplace_back()\n";
+    // When we call an "emplace" member, we pass arguments to a constructor for the element type.
+    // The emplace members use those arguments to construct an element directly in space managed by the container.
+    entities2.emplace_back("E2", 2);
 
     vector<mk::Box> boxes2; // default initialize, empty vector
     boxes2.reserve(5);      // prevent reallocation if you know the size, ie., capacity 0 -> 1 -> 2 -> 4 ..
     cout << "boxes2.capacity(): " << boxes2.capacity() << endl;
     cout << "boxes2.size(): " << boxes2.size() << endl;
 
-    traverseVector(boxes1);
+    traverseVector(entities);
+
+    // The container equality operators use the element’s == operator, and the relational operators use the
+    // element’s < operator. If the element type doesn’t support the required operator, then we cannot use the
+    // corresponding operations on containers holding that type.
+    if (entities == entities2)
+        cout << "Two vectors are equal." << endl;
+    else
+        cout << "Two vectors are not equal" << endl;
+
+    // No push_front() on vector but we can insert before begin()
+    // warning : inserting anywhere but at the end of a vector might be slow
+    vector<string> svec;
+    svec.push_back("10");
+    svec.push_back("20");
+    svec.push_back("30");
+
+    // like insert an element at svec[0]="0" and move the remaining:
+    svec.insert(svec.begin(), "0!"); //[0!, 10, 20, 30]
+
+    // like insert an element at svec[2]="15" and move the remaining:
+    svec.insert(svec.begin() + 2, "15!"); // [0!, 10, 15!, 20, 30]
+    traverseVector(svec);
+
+    // insert last element of svec into the beginning of svec2
+    vector<string> svec2 = {"ten", "eleven"};
+    svec2.insert(svec2.begin(), svec.end() - 1, svec.end()); // [Three, ten, eleven]
+    traverseVector(svec2);
+
+    vector<string> va = {"A0", "A1", "A2"};
+    vector<string> vb = {"B", "B1", "B"};
+
+    cout << "Append vector vb to va:" << endl;
+    va.insert(va.end(), vb.begin(), vb.end()); // [A0, A1, A2, B, B1, B]
+    traverseVector(va);
+
+    cout << "Erase element at index 2:" << endl;
+    va.erase(va.begin() + 2); // [A0, A1, B, B1, B]
+    traverseVector(va);
+
+    cout << "Find and erase element 'B':" << endl;
+    auto it = find(va.begin(), va.end(), "B");
+    if (it != va.end())
+        va.erase(it); // if found, delete element   [A0, A1, B1, B]
+    else
+        cout << "Element not found." << endl;
+    traverseVector(va);
+
+    // Almost any type can be used as the element type of a sequential container.
+    vector<vector<string>> lines; // vector of vectors
 }
 template <typename T> void traverseVector(const vector<T> &vect)
 {
     printTitle("Traverse a Vector");
 
-    cout << "\nindex[";
+    cout << "index[";
     // traverse using index
     for (int i = 0; i < vect.size(); ++i)
-        cout << vect[i] << ' ';
+    {
+        if (i != 0)
+            cout << ", ";
 
+        cout << vect[i];
+    }
     cout << "]" << endl;
 
-    cout << "\niterator[";
+    cout << "iterator[";
     // traverse using iterator
+    int comma = 0;
     for (auto it = vect.begin(); it != vect.end(); ++it)
-        cout << *it << ' ';
+    {
+        if (comma++ != 0)
+            cout << ", ";
 
+        cout << *it;
+    }
     cout << "]" << endl;
 
     cout << "foreach[";
     // traverse using for each
+    comma = 0;
     for (const auto &item : vect)
-        cout << item << ' ';
+    {
+        if (comma++ != 0)
+            cout << ", ";
 
+        cout << item;
+    }
     cout << "]" << endl;
 }
 
@@ -777,6 +891,18 @@ first character), if there is one.
 The iterator returned by end() is an iterator positioned “one past the end” of the associated container (or string).
 If the container is empty, the iterators returned by begin and end are equal—they are "both off-the-end" iterators.
 
+The library uses left-inclusive ranges because such ranges have three convenient properties.
+Assuming begin and end denote a valid iterator range, then
+    * If begin equals end, the range is empty
+    * If begin is not equal to end, there is at least one element in the range,
+      and begin refers to the first element in that range
+    * We can increment begin some number of times until begin == end
+
+    while (begin != end) {
+        *begin =  val;    // ok: range isn't empty so begin denotes an element
+        ++begin;          // advance the iterator to get the next element
+    }
+
 If the object is const, then begin and end return a const_iterator.
 if the object is not const, they return iterator.
 
@@ -848,5 +974,9 @@ void iteratorBasics()
 
     // If the object is const, then begin and end return a const_iterator.
     const vector<int> cv;
-    auto it2 = cv.begin(); // it2 has type "vector<int>::const_iterator
+    auto it2 = cv.begin(); // it2 has type vector<int>::const_iterator
+
+    // When write access is not needed, use cbegin and cend
+    vector<double> vect3;
+    auto it3 = vect3.cbegin(); // it3 has type vector<double>::const_iterator
 }
