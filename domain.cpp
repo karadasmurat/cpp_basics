@@ -135,12 +135,37 @@ ostream &operator<<(ostream &os, const Box &box)
 // A default parameter is only used in the declaration.
 Entity::Entity(const string &name, int s) : e_name(name), e_size(s)
 {
-    cout << "Construct Object: Entity{name:" << e_name << ", size:" << e_size << "}" << endl;
+    cout << "Construct Entity{name:" << e_name << ", size:" << e_size << "}" << endl;
 }
+
+// Copy constructor
+Entity::Entity(const Entity &other) : e_name(other.e_name), e_size(other.e_size)
+{
+    cout << "Copy Entity" << endl;
+}
+
 Entity::~Entity()
 {
     cout << "Destruct Entity obj " << e_name << endl;
 }
+
+// operator== overloading as a non-member function
+// Assume 2 entity instances are equal if their sizes are equal.
+bool operator==(const Entity &lhs, const Entity &rhs)
+{
+    // Guard self assignment
+    if (&lhs == &rhs)
+        return true;
+
+    return lhs.getSize() == rhs.getSize();
+}
+
+ostream &operator<<(ostream &os, const Entity &e)
+{
+    return os << "Entity{name:" << e.getName() << ", size:" << e.getSize() << "}";
+    // return os;
+}
+
 } // namespace mk
   /*
   #include <iostream>

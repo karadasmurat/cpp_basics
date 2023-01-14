@@ -82,6 +82,9 @@ class Entity
     // A default parameter is only used in the declaration.
     Entity(const std::string &n, int s = 1);
 
+    // Copy constructor
+    Entity(const Entity &other);
+
     // Destructors are a “prepare to die” member function. It never takes any
     // parameters, and it never returns anything. The most common example is when
     // the constructor uses new, and the destructor uses delete.
@@ -98,5 +101,11 @@ class Entity
     }
 
 }; // class Entity
+
+// operator overloading using non-member function
+bool operator==(const Entity &lhs, const Entity &rhs);
+
+// Operator overloading using non-member function:
+std::ostream &operator<<(std::ostream &os, const mk::Entity &e);
 
 } // namespace mk
