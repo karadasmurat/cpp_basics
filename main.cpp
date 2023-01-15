@@ -378,8 +378,10 @@ int main()
     // variableBasics();
     // stringBasics();
     // arrayBasics();
-    vectorBasics();
+    // vectorBasics();
     // constBasics();
+
+    // defaultArguments();
 
     // inputBasics();
 
@@ -404,6 +406,7 @@ int main()
     // searchBasics();
 
     // heapBasics();
+    stackBasics();
 
     // exceptionBasics();
 

@@ -38,6 +38,8 @@ void arrayBasics();
 void vectorBasics();
 void constBasics();
 
+void defaultArguments();
+
 template <typename T> void traverseVector(const std::vector<T> &vect);
 
 int getBiggerOfTwo(int x, int y);
@@ -91,6 +93,9 @@ void printTitle(const std::string &title);
 void searchBasics();
 int binarySearch(int *arr, int cnt, int arg);
 void heapBasics();
+void listBasics();
+void stackBasics();
+template <typename T> void processNode(T node);
 
 void exceptionBasics();
 void throwAnInt();

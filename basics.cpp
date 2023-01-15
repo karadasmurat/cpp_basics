@@ -296,11 +296,10 @@ void stringBasics()
     if (isalpha(mychar) && isupper(mychar) && isdigit(mydigit))
         cout << "valid char" << endl;
 
-// If we want to do something to every character in a string
-// by far the best approach is to use a statement introduced by the new
-// standard: the range for statement.
-std:
-    string username = "$abc123_";
+    // If we want to do something to every character in a string
+    // by far the best approach is to use a statement introduced by the new
+    // standard: the range for statement.
+    std::string username = "$abc123_";
     bool allAlphaNumericChars = true;
     // int punct_cnt = 0;
     decltype(username.size()) punct_cnt = 0; // decltype to declare our counter based on the string username.
@@ -332,6 +331,17 @@ std:
 
     if (!username.empty())
         cout << "First character is: " << username[0] << endl;
+
+    // substring
+    // string substr (size_t pos = 0, size_t len = npos) const;
+    // Returns a newly constructed string object with its value initialized to a copy of a substring of this object.
+    // Pos-> represents starting index of the substring, Len->represents length of the substring
+    // The first character's index is 0
+    std::string s01("0123456789");
+    cout << "substring      : " << s01 << endl;
+    cout << "substr(0, 3)   : " << s01.substr(0, 3) << endl; // start from index 1, 3 chars ("012")
+    cout << "substr(2, 3)   : " << s01.substr(2, 3) << endl; // start from index 1, 3 chars ("234")
+    cout << "substr(3)      : " << s01.substr(3) << endl;    // pos=3,  ("3456789")
 }
 
 void arrayBasics()
@@ -417,23 +427,6 @@ void arrayBasics()
     // array size is: end - begin (index starts at 0)
     std::sort(weights, weights + SIZE);
     simplePrint(weights, weights + SIZE);
-}
-
-void listBasics()
-{
-    printTitle("List Basics");
-
-    /*
-    A container holds a collection of objects of a specified type.
-    The sequential containers let the programmer control the order (the position at which elements are put into the
-    container) in which the elements are stored and accessed.
-
-    The list and forward_list containers are designed to make it fast to add or remove an element anywhere in the
-    container. In exchange, these types do not support random access to elements: We can access an element only by
-    iterating through the container. Moreover, the memory overhead for these containers is often substantial, when
-    compared to vector, deque , and array.
-
-    */
 }
 
 void vectorBasics()
@@ -979,4 +972,29 @@ void iteratorBasics()
     // When write access is not needed, use cbegin and cend
     vector<double> vect3;
     auto it3 = vect3.cbegin(); // it3 has type vector<double>::const_iterator
+}
+
+void f_allDefaultArgs(int x = -1, int y = -2)
+{
+    cout << "x: " << x << ", y: " << y << endl;
+}
+
+void f_defaultArgs(int x, int y = -1)
+{
+    cout << "x: " << x << ", y: " << y << endl;
+}
+
+void defaultArguments()
+{
+    /*
+    Default Arguments
+    Allow a function to be called without providing one or more trailing arguments.
+    */
+    printTitle("Optional Parameters");
+    f_defaultArgs(1);      // x: 1, y: -1
+    f_defaultArgs(11, 22); // x: 11, y: 22
+
+    f_allDefaultArgs();       // x: -1, y: -2
+    f_allDefaultArgs(11);     // x: 11, y: -2  // first default argument is assigned first.
+    f_allDefaultArgs(11, 22); // x: 11, y: 22
 }
