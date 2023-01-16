@@ -57,6 +57,7 @@ In C, the usual convention is to give header files names that end with .h
 #include "enums.h"
 #include "functions.h"
 #include "mk_datastructures.h"
+#include "patterns.h"
 #include <iostream>
 #include <math.h>
 #include <vector>
@@ -406,11 +407,13 @@ int main()
     // searchBasics();
 
     // heapBasics();
-    stackBasics();
+    // stackBasics();
 
     // exceptionBasics();
 
     // iteratorBasics();
+
+    memento();
 
     return 0;
 }
