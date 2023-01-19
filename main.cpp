@@ -411,9 +411,10 @@ int main()
 
     // exceptionBasics();
 
+    mapBasics();
     // iteratorBasics();
 
-    memento();
+    // memento();
 
     return 0;
 }

@@ -8,16 +8,10 @@
 
 /*
 
-“Code inside headers ordinarily should not use using
- declarations.  If a header has a using
+Code inside headers ordinarily should not use using declarations.  If a header has a using
  declaration, then every program that includes that header gets that same using
  declaration. As a result, a program that didn’t intend to use the specified
-library name might encounter unexpected name conflicts.”
-
-Excerpt From
-C++ Primer, 5/e
-Lippman, Stanley B.
-This material may be protected by copyright.
+library name might encounter unexpected name conflicts.
 
 
 In general, avoid putting using directives in header files (*.h)
@@ -35,8 +29,11 @@ void helloWorld();
 void variableBasics();
 void stringBasics();
 void arrayBasics();
-void vectorBasics();
 void constBasics();
+
+void vectorBasics();
+void mapBasics();
+void iteratorBasics();
 
 void defaultArguments();
 
@@ -53,7 +50,6 @@ void getUserInputStr();
 void addInputNumbers();
 int sumAllInputs();
 void compareInputs();
-void iteratorBasics();
 
 void typeInference();
 void templateFunctions();
@@ -89,6 +85,7 @@ void simplePrint(int cnt, int *arg);
 void printArray_v1(int cnt, int arg[]);
 template <typename T> void simplePrint(T *begin, T *end); // print array using iterator logic
 void printTitle(const std::string &title);
+void simplePrint(const std::vector<int> &vect);
 
 void searchBasics();
 int binarySearch(int *arr, int cnt, int arg);
