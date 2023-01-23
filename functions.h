@@ -1,6 +1,7 @@
 /* functions.h */
 #pragma once
 
+#include <iostream>
 #include <vector>
 
 #include "domain.h"
@@ -55,6 +56,7 @@ void typeInference();
 void templateFunctions();
 
 void pointerBasics();
+void dynamicMemory();
 void referenceBasics();
 void mayModifyArgument(mk::Box &b);
 void doNotModifyArgument(const mk::Box &b);
@@ -77,13 +79,32 @@ void printEnum(Day d);
 
 void simplePrint(int arg);
 void simplePrint(double arg);
-template <typename T> void simplePrint(T *p);
 void simplePrint(const int *p);
 void simplePrint(const std::string &title, int arg);
 void simplePrint(const std::string &title, double arg);
 void simplePrint(int cnt, int *arg);
 void printArray_v1(int cnt, int arg[]);
-template <typename T> void simplePrint(T *begin, T *end); // print array using iterator logic
+
+// print a pointer
+template <typename T> void simplePrint(T *p)
+{
+    std::cout << "Pointer to type: " << typeid(T).name() << "ptr: " << p << ", *ptr: " << *p << std::endl;
+}
+
+// print an array using iterator logic
+template <typename T> void simplePrint(T *begin, T *end)
+{
+    std::cout << "[";
+    int i = 0; // just for the comma seperation
+    while (begin != end)
+    {
+        if (i != 0)
+            std::cout << ", ";
+        std::cout << *begin++; // dereference iterator and then increment
+        i++;
+    }
+    std::cout << "]" << std::endl;
+}
 void printTitle(const std::string &title);
 void simplePrint(const std::vector<int> &vect);
 

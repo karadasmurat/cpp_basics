@@ -19,11 +19,6 @@ void simplePrint(double arg)
     std::cout << std::fixed << std::setprecision(2) << arg << endl;
 }
 
-template <typename T> void simplePrint(T *p)
-{
-    cout << "ptr: " << p << ", *ptr: " << *p << endl;
-}
-
 void simplePrint(const int *p)
 {
     cout << "ptr: " << p << ", *ptr: " << *p << endl;
@@ -58,21 +53,6 @@ void simplePrint(int cnt, int *arg)
         if (i != 0)
             cout << ", ";
         cout << arg[i]; // access arbitrary element: [i]
-    }
-    cout << "]" << endl;
-}
-
-// print an array using iterator logic
-template <typename T> void simplePrint(T *begin, T *end)
-{
-    cout << "[";
-    int i = 0; // just for the comma seperation
-    while (begin != end)
-    {
-        if (i != 0)
-            cout << ", ";
-        cout << *begin++; // dereference iterator and then increment
-        i++;
     }
     cout << "]" << endl;
 }

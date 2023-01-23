@@ -9,51 +9,71 @@
   is an expression that yiels the address of x, as T*
 
 
-  A computer’s memory is a sequence of bytes. We can number the bytes from 0 to
-  the last one. We call such “a number that indicates a location in memory” an
-  address. You can think of an address as a kind of integer value. The first
-  byte of memory has the address 0, the next the address 1, and so on.
+  A computer’s memory is a sequence of bytes. We can number the bytes from 0 to the last one. We call such “a number
+that indicates a location in memory” an address. You can think of an address as a kind of integer value. The first byte
+of memory has the address 0, the next the address 1, and so on.
 
   Everything we put in memory has an address. For example:
 
       int var = 17;
 
-  will set aside an “int-size” piece of memory for var somewhere and put the
-  value 17 into that memory. But where exactly? - The “address of” operator,
-  unary &, is used to get the address of an object.
+will set aside an “int-size” piece of memory for var somewhere and put the value 17 into that memory. But where exactly?
+- The “address of” operator, unary &, is used to get the address of an object.
 
     int* ptr = &var; 
 
-  An object that holds an address value is called a pointer. For example, the type
-  needed to hold the address of an int is called a “pointer to int” or an “int
-  pointer” and the notation is int*
+A variable that holds an address value is called a pointer. For example, the type needed to hold the address of an int
+is called a “pointer to int” or an “int pointer” and the notation is int*
 
-  If we want to see the value of the object pointed to, we can do that using the
-  “contents of” operator “(often called the dereference operator), unary *
+If we want to see the value of the object pointed to, we can do that using the “contents of” operator “(often called the
+dereference operator), unary *
+
+Note that ptr stores a memory address location, whereas *ptr refers to the value stored in that address.
 
 
-  When you start a C++ program, the compiler sets aside memory for your code
-  (sometimes called code storage or text storage) and for the global variables
-  you define (called static storage). It also sets aside some memory to be used
-  when you call functions, and they need space for their arguments and local
-  variables (that’s called stack storage or automatic storage). The rest of the
-  computer’s memory is potentially available for other uses; it is “free”
+When you start a C++ program, the compiler sets aside memory for your code (sometimes called code storage or text
+storage) and for the global variables you define (called static storage). It also sets aside some memory to be used when
+you call functions, and they need space for their arguments and local variables (that’s called stack storage or
+automatic storage). The rest of the computer’s memory is potentially available for other uses; it is “free”
 
-  We request memory to be allocated on the free store by the "new" operator.
-  The new operator returns a pointer to the object it creates.
-  If it created several objects (an array), it returns a pointer to the first of
-  those objects. (A pointer does not know how many elements it points to, the
-  value is the address of the first byte of the memory.)
+We request memory to be allocated on the free store by the "new" operator. The new operator returns a pointer to the
+object it creates. If it created several objects (an array), it returns a pointer to the first of those objects. (A
+pointer does not know how many elements it points to, the value is the address of the first byte of the memory.)
 
        double* p = new double[4];
 
-  This asks the C++ run-time system to allocate four doubles on the free store
-  and return a pointer to the first double to us.
+This asks the C++ run-time system to allocate four doubles on the free store and return a pointer to the first double to
+us.
 
-  Unlike a reference, a pointer is an object in its own right.
-  A pointer variable has its own identity : a distinct, visible memory address
-  that can be taken with the unary &operator and a certain amount of space that
-  can be measured with the sizeof operator.
+Unlike a reference, a pointer is an object in its own right. A pointer variable has its own identity : a distinct,
+visible memory address that can be taken with the unary &operator and a certain amount of space that can be measured
+with the sizeof operator.
+
+
+There are three common problems with using new and delete to manage dynamic memory:
+
+    1. Forgetting to delete memory. Neglecting to delete dynamic memory is known as a “memory leak”, because the memory
+is never returned to the free store. Testing for memory leaks is difficult because they usually cannot be detected until
+the application is run for a long enough time to actually exhaust memory.
+
+    2. Deleting the same memory twice. This error can happen when two pointers address the same dynamically allocated
+object. If delete is applied to one of the pointers, then the object’s memory is returned to the free store.
+
+    3. Using an object after it has been deleted. This error can sometimes be detected by making the pointer null after
+the delete.
+
+You can avoid all of these problems by using smart pointers exclusively.
+
+Classes that allocate resources—and that do not define destructors to free those resources—can be subject to the same
+kind of errors that arise when we use dynamic memory.
+
+When we delete a pointer, that pointer becomes invalid. Although the pointer is invalid, on many machines the pointer
+continues to hold the address of the (freed) dynamic memory. After the delete, the pointer becomes what is referred to
+as a dangling pointer. A dangling pointer is one that refers to memory that once held an object but no longer does so.
+Dangling pointers have all the problems of uninitialized pointers.
+
+Dynamically allocated objects have a lifetime that is independent of where they are created; they exist until they are
+explicitly freed.
 
 */
 
@@ -76,8 +96,8 @@ void checkParams(Box *b)
 void pointerBasics()
 {
 
-    // Unlike a reference, a pointer need not be initialized at the time it is
-    // defined
+    // Pointers must be declared before they can be used, just like a normal variable.
+    // Unlike a reference, a pointer need not be initialized at the time it is defined
     int *aPtr; // uninitialized: likely trouble
     // int& myNewRef; // ERR reference declaration requires initialization
 
@@ -87,13 +107,10 @@ void pointerBasics()
     // *aPtr = 7.0; // dereferencd a pointer without initializing it is asking for
     // trouble.
 
-    // nullptr
-    int *nPtr1 = 0;
-    int *nPtr2 = NULL;
-    int *nPtr3 = nullptr;
-    cout << "nPtr1:" << nPtr1 << endl << "nPtr2: " << nPtr2 << endl << "nPtr3: " << nPtr3 << endl;
-
     int x = 10;
+
+    // Initializing a pointer via the Address-Of Operator (&)
+    // The “address of” operator, unary &, is used to get the address of an object.
     int *px = &x; // 0x...
 
     cout << "x\t: " << x << endl;
@@ -101,61 +118,64 @@ void pointerBasics()
     cout << "Adress of pointer (&px): " << &px << endl;
     cout << "Pointer to value (*px): " << *px << endl;
 
-    // new operator returns a pointer
-    int *p2 = new int{5};
+    /*
+    In C++, dynamic memory is managed through a pair of operators:
+
+        • new, which allocates, and optionally initializes, an object in dynamic memory and returns a pointer to that
+    object (Objects allocated on the free store are unnamed, so new offers no way to name the objects that it allocates.
+    Instead, new returns a pointer to the object it allocates)
+
+        • delete, which takes a pointer to a dynamic object, destroys that object, and frees the associated memory
+
+    */
 
     int a = 5;
     int b = 6;
-    int *ptr;
-    ptr = &a;
+    int *iptr;
+    iptr = &a;
 
-    /* Access through pointers:
-      When a pointer points to an object(!), we can use the dereference operator
-      (the * operator) to access that object. The “contents of” operator * (also
-      called the dereference operator) allows us to read and write the object
-      pointed to by a pointer
+    /*
+    Access through pointers:
+    When a pointer points to an object(!), we can use the dereference operator (the * operator) to access that object.
+    The “contents of” operator * (also called the dereference operator) allows us to read and write the object pointed
+    to by a pointer
 
-      Note: We may dereference only a valid pointer that points to an object.
+    Note: We may dereference only a valid pointer that points to an object.
 
-      Advice: Initialize all Pointers. Uninitialized pointers are a common source
-      of run-time errors. What happens when we use an uninitialized pointer is
-      undefined. Using an uninitialized pointer almost always results in a
-      run-time crash. Debugging the resulting crashes can be surprisingly hard -
-      There is no way to distinguish a valid address from an invalid one formed
-      from the bits that happen to be in the memory in which the pointer was
-      allocated. (garbage!) If there is no object to bind to a pointer, then
-      initialize the pointer to nullptr or zero. That way, the program can detect
-      that the pointer does not point to an object.
-  */
+    Advice: Initialize all Pointers. Uninitialized pointers are a common source of run-time errors. What happens when we
+    use an uninitialized pointer is undefined. Using an uninitialized pointer almost always results in a run-time crash.
+    Debugging the resulting crashes can be surprisingly hard - There is no way to distinguish a valid address from an
+    invalid one formed from the bits that happen to be in the memory in which the pointer was allocated. (garbage!) If
+    there is no object to bind to a pointer, then initialize the pointer to nullptr or zero. That way, the program can
+    detect that the pointer does not point to an object.
+    */
     int *notInitializedPtr;
     // *notInitializedPtr = 7.0; // ERR: dereferencing a pointer without
     // initializing it is asking for trouble.
 
-    *ptr += 5; // a is now 10, When we assign to *ptr we are assigning to the
-               // object to which ptr points.
+    // If we want to see the value of the object pointed to, we can do that using the “contents of” operator “(often
+    // called the dereference operator), unary *
+    *iptr += 5; // a is now 10, When we assign to *ptr we are assigning to the object to which ptr points.
 
-    // Re-assign a pointer
-    ptr = &b;
-    *ptr = 1; // b is now 1
+    iptr = &b; // Re-assign a pointer
+    *iptr = 1; // b is now 1
 
     assert(a == 10);
     assert(b == 1);
 
-    int *pi = ptr;
-    // double *pd = pi; // ERR: types of pi and pd differ
+    int *pi = iptr; // Re-assign a pointer
+
+    // A pointer can only hold an address of the declared type; it cannot hold an address of a different type.
+    // double *pd = iptr; // ERR: types of iptr and pd differ
 
     /*
     arrays "decay" into pointers.
-    The term decay signifies loss of type and dimension; numbers decay into int*
-    by losing the dimension. If you're passing an array by value, what you're
-    really doing is copying a pointer - a pointer to the array's first element is
-    copied to the parameter (whose type should also be a pointer the array
-    element's type). This works due to array's decaying nature; once decayed,
-    sizeof no longer gives the complete array's size, because it essentially
-    becomes a pointer. In addition to using the dereference operator * on a
-    pointer, we can use the subscript operator []
-
-  */
+    The term decay signifies loss of type and dimension; numbers decay into int* by losing the dimension. If you're
+    passing an array by value, what you're really doing is copying a pointer - a pointer to the array's first element is
+    copied to the parameter (whose type should also be a pointer the array element's type). This works due to array's
+    decaying nature; once decayed, sizeof no longer gives the complete array's size, because it essentially becomes a
+    pointer. In addition to using the dereference operator * on a pointer, we can use the subscript operator []
+    */
     cout << "==== DECAY ====" << endl;
 
     int arr[5]{11, 22, 33, 44, 55};
@@ -202,31 +222,6 @@ void pointerBasics()
     int *ai = new int[3]{10, 20, 30};
     cout << "ai[2]: " << ai[2] << endl;
 
-    /*
-    The "new" operator allocates (“gets”) memory from the free store.
-    Since a computer’s memory is limited, it is usually a good idea to return
-    memory to the free store once we are finished using it. That way, the free
-    store can reuse that memory for a new allocation. For large programs and for
-    long-running programs such freeing of memory for reuse is essential. The
-    operator for returning memory to the free store is called delete.
-
-    There are two forms of delete:
-        • delete p frees the memory for an individual object allocated by new.
-        • delete[] p frees the memory for an array of objects allocated by new.
-
-    */
-
-    // one of the major reasons for using the free store:
-    // we can create objects in a function and pass them back to a caller.
-    double *r = createAndPassBack(5);
-
-    // use r
-    cout << "received address: " << r << endl;
-    cout << "r[4] value: " << r[4] << endl;
-
-    // free memory r
-    delete[] r;
-
     // this is obvious
     int y = increment(x);
     cout << "x: " << x << endl; // 10
@@ -242,23 +237,26 @@ void pointerBasics()
 
     /*
     A null pointer does not point to any object.
-    Code can check whether a pointer is null before attempting to use it.
-    There are several ways to obtain a null pointer, and the most direct approach
-    is to initialize the pointer using the literal nullptr. Alternatively, we can
+    Code can check whether a pointer is null before attempting to use it. There are several ways to obtain a null
+    pointer, and the most direct approach is to initialize the pointer using the literal nullptr. Alternatively, we can
     initialize a pointer to the literal 0.
 
-    Using an uninitialized pointer is not the same as initializing with nullptr -
-    There is no way to distinguish a valid address from an invalid one formed from
-    the bits that happen to be in the memory in which the pointer was allocated.
+    Using an uninitialized pointer is not the same as initializing with nullptr - There is no way to distinguish a valid
+    address from an invalid one formed from the bits that happen to be in the memory in which the pointer was allocated.
     (garbage!)
 
-    Older programs sometimes use a preprocessor variable named NULL, which the
-    cstdlib header defines as 0. When we use a preprocessor variable, the
-    preprocessor automatically replaces the variable by its value. Hence,
-    initializing a pointer to NULL is equivalent to initializing it to 0.
+    Older programs sometimes use a preprocessor variable named NULL, which the cstdlib header defines as 0. When we use
+    a preprocessor variable, the preprocessor automatically replaces the variable by its value. Hence, initializing a
+    pointer to NULL is equivalent to initializing it to 0.
     */
-    int *np1 = nullptr;
-    int *np2 = 0;
+
+    int *nPtr1 = 0;
+    int *nPtr2 = NULL; // define NULL 0
+    int *nPtr3 = nullptr;
+    cout << "nPtr1:" << nPtr1 << endl << "nPtr2: " << nPtr2 << endl << "nPtr3: " << nPtr3 << endl;
+
+    // Dereferencing a null pointer causes exception
+    // cout << "*nPtr1:" << *nPtr1 << endl << "*nPtr2: " << *nPtr2 << endl << "*nPtr3: " << *nPtr3 << endl;
 
     checkParams(nullptr);
 
@@ -272,6 +270,177 @@ void pointerBasics()
     of the object at that address is unknown. We can pass it to or return it from
     a function
     */
+}
+
+void dynamicMemory()
+{
+
+    /*
+    In C++, dynamic memory is managed through a pair of operators:
+
+        • new, which allocates, and optionally initializes, an object in dynamic memory and returns a pointer to that
+    object (Objects allocated on the free store are unnamed, so new offers no way to name the objects that it allocates.
+    Instead, new returns a pointer to the object it allocates)
+
+        • delete, which takes a pointer to a dynamic object, destroys that object, and frees the associated memory
+
+    The "new" operator allocates (“gets”) memory from the free store. Since a computer’s memory is limited, it is
+    usually a good idea to return memory to the free store once we are finished using it. That way, the free store can
+    reuse that memory for a new allocation. For large programs and for long-running programs such freeing of memory for
+    reuse is essential. The operator for returning memory to the free store is called delete.
+
+    There are two forms of delete:
+        • delete p frees the memory for an individual object allocated by new.
+        • delete[] p frees the memory for an array of objects allocated by new.
+
+    */
+
+    // default initialized; *pi1 is “undefined”
+    int *pi1 = new int;
+
+    // For class types (such as string) that define their own constructors …
+    string *ps = new string; // point to empty string
+
+    // We can initialize a dynamically allocated object using direct initialization, traditional construction (using
+    // parentheses), and under the new standard, list initialization (with curly braces):
+
+    int *pi2 = new int(1024);
+    simplePrint<int>(pi2);
+    int *pi3 = new int{5};
+    int *pi4(new int(42));         // p points to dynamic mem
+    Entity *pe(new Entity("PE1")); // copy initialize a pointer like an object: T* ptr( new X() )
+    simplePrint<Entity>(pe);
+    vector<int> *pv = new vector<int>{0, 1, 2, 3, 4, 5};
+
+    // We ask new to allocate an array of objects by specifying the number of objects to allocate in a pair of square
+    // brackets after a type name.
+    // block of ten uninitialized ints
+    int *pia = new int[10]; // vs. new int(10) !
+
+    // block of ten ints value initialized to 0
+    int *pia2 = new int[10]();
+
+    // block of ten empty strings
+    string *psa = new string[10];
+
+    // block of ten empty strings
+    string *psa2 = new string[10]();
+
+    // block of ten ints each initialized from the corresponding initializer
+    int *pia3 = new int[10]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+    // block of ten strings; the first four are initialized from the given initializers and remaining elements are value
+    // initialized
+    string *psa3 = new string[10]{"a", "an", "the", string(3, 'x')};
+
+    // free memory
+    // The standard form of operator delete[] will take only one parameter.
+    delete[] pia;
+    delete[] pia2;
+    delete[] pia3;
+    delete[] psa;
+    delete[] psa2;
+    delete[] psa3;
+
+    // one of the major reasons for using the free store:
+    // we can create objects in a function and pass them back to a caller.
+    double *r = createAndPassBack(5);
+
+    // use r
+    cout << "received address: " << r << endl;
+    cout << "r[4] value: " << r[4] << endl;
+
+    // free memory r
+    delete[] r;
+}
+
+void smartPointers()
+{
+
+    /*
+    Properly freeing dynamic objects turns out to be a surprisingly rich source of bugs. To make using dynamic memory
+    easier (and safer), the new library provides two smart pointer types that manage dynamic objects. A smart pointer
+    acts like a regular pointer with the important exception that it automatically deletes the object to which it
+    points. We use a smart pointer in ways that are similar to using a pointer. Dereferencing a smart pointer returns
+    the object to which the pointer points.
+
+    When we use a smart pointer, the smart pointer class ensures that memory is freed when it is no longer needed even
+    if the block is exited prematurely. In contrast, memory that we manage directly is not automatically freed when an
+    exception occurs. If an exception happens between the new and the delete, and is not caught, then this memory may
+    never be freed.
+
+    Smart pointers are templates. Therefore, when we create a smart pointer, we must supply additional information—in
+    this case, the type to which the pointer can point.
+
+    A default initialized smart pointer holds a null pointer. The smart pointer types define a function named get that
+    returns a built-in pointer to the object that the smart pointer is managing. (Note. Don’t delete the pointer
+    returned from get() )
+
+        • unique_ptr
+    A unique_ptr “owns” the object to which it points. Unlike shared_ptr, only one unique_ptr at a time can point to a
+    given object.
+
+    Because a unique_ptr owns the object to which it points, unique_ptr does not support ordinary copy or assignment.
+
+    The object to which a unique_ptr points is destroyed when the unique_ptr is destroyed.
+
+    unique_ptr is defined in the <memory> header in the C++ Standard Library. It is exactly as efficient as a raw
+    pointer and can be used in C++ Standard Library containers.
+
+    In addition to managing the pointed object's lifetime, unique_ptr provides the other expected capabilities of a
+    smart pointer: it overloads operator* and operator->, provides a means to obtain the raw pointer (get), to
+    relinquish control of the pointed object (release), and to replace the object it manages (reset).
+
+    */
+
+    unique_ptr<string> up;
+
+    unique_ptr<string> up1(new string("Stegosaurs"));
+
+    cout << "*unique_ptr<string>: " << *up1 << endl;
+
+    /*
+    A unique_ptr does not share its pointer. It cannot be copied to another unique_ptr, passed by value to a function,
+    or used in any C++ Standard Library algorithm that requires copies to be made. A unique_ptr can only be moved. This
+    means that the ownership of the memory resource is transferred to another unique_ptr and the original unique_ptr no
+    longer owns it.
+    */
+
+    // ERR no copy
+    // constructor explicitly deleted
+    // unique_ptr<string> up2(up1);
+
+    // ERR no assign
+    // operator= explicitly deleted
+    // up = up1;
+
+    // make_unique
+    // Create and return a unique_ptr to an object of the specified type
+    // The addition of make_unique finally means we can tell people to 'never' use new rather than the previous rule to
+    // "'never' use new except when you make a unique_ptr".
+
+    // Use the constructor that matches these arguments C++14?
+    // can use auto with make_unique
+    auto upi1 = make_unique<int>(5);
+    cout << "*make_unique<int>(5): " << *upi1 << endl;
+
+    // Use the Entity default constructor.
+    unique_ptr<Entity> upe1 = make_unique<Entity>();
+
+    // Use the constructor that matches these arguments
+    auto upe2 = make_unique<Entity>("Felis", 22);
+
+    // Create a unique_ptr to an array of 5 Entities
+    unique_ptr<Entity[]> upe3 = make_unique<Entity[]>(5);
+
+    // unique_ptr can be used in standard containers
+    vector<unique_ptr<Entity>> vec;
+    // ERR C2280
+    // attempting to invoke copy constructor, which is a deleted function.
+    // vec.push_back(upe2);
+
+    // OK. upe2 no longer points to anything
+    vec.push_back(std::move(upe2));
 }
 
 /*
@@ -420,7 +589,7 @@ normally just put func_name. For example:
 
     f is a pointer to a function taking one integer argument, and returns void:
 
-    void (*f)(int);
+    void (*f)(int);     // do not forget paranthesis around *f
 
 Invoke the function pointed to just as if you were calling a function.
 
@@ -482,7 +651,6 @@ void process(void (*f)())
 
 void functionPointerBasics()
 {
-
     process(sampleHandler);
 
     vector<int> nums{1, 2, 3, 4, 5};
@@ -493,14 +661,14 @@ void functionPointerBasics()
     {
         Box b{i};
         boxes.push_back(b);
-        cout << b.toString();
+        cout << b;
     }
 
     incrementAllBoxes(boxes, mayModifyArgument);
 
     for (const Box &b : boxes)
     {
-        cout << b.toString();
+        cout << b;
     }
 }
 
@@ -591,7 +759,7 @@ void doNotModifyArgument(const mk::Box &b)
     cout << __func__ << endl;
 }
 
-void modifyValue(int &arg)
+void resetArgument(int &arg)
 {
     arg = 333;
 }

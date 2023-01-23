@@ -391,6 +391,7 @@ int main()
     // cout << "getMax(33, 55, 44): " << getMax(33, 55, 44) << endl;
 
     // pointerBasics();
+    dynamicMemory();
     // referenceBasics();
     // classBasics();
     // inheritanceBasics();
@@ -411,7 +412,7 @@ int main()
 
     // exceptionBasics();
 
-    mapBasics();
+    // mapBasics();
     // iteratorBasics();
 
     // memento();
