@@ -119,3 +119,7 @@ void exceptionBasics();
 void throwAnInt();
 void throwAChar();
 void throwACustomException();
+
+void fileBasics();
+void readFile();
+void writeFile();
