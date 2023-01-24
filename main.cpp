@@ -385,6 +385,9 @@ int main()
     // vectorBasics();
     // constBasics();
 
+    // switchBasics(16);
+    // loopBasics();
+
     // defaultArguments();
 
     // inputBasics();
@@ -422,7 +425,40 @@ int main()
 
     // memento();
 
-    exercise1(6);
+    // ====== exercises =========
+    try
+    {
+        factorial(-5L);
+    }
+    catch (std::invalid_argument e)
+    {
+        std::cout << e.what() << endl;
+    }
+    assert(factorial(5) == 120L);
+    assert(factorial(0) == 1L);
+
+    // exercise1(6);
+    // exercise2(10);
+    // exercise3(123);
+    // exercise4(1);
+
+    // assert(absolute(-1) == 1); // OK
+    // assert(absolute(0) == 0);  // OK
+    // assert(absolute(1) == 1);  // OK
+
+    // assert(earnings(10.0) == 100.0); // OK
+    // assert(earnings(40.0) == 400.0); // OK
+    // assert(earnings(50.0) == 530.0); // OK
+
+    // assert(getBiggerOfTwo(-1, 1) == 1);
+    // assert(getBiggerOfTwo(-5, -1) == -1);
+    // assert(getBiggerOfTwo(5, 1) == 5);
+
+    // assert(getScore(50.0, 80.0, 70.0) == 65);
+
+    // assert(totalPrice(1, 10) == 10);
+    // assert(totalPrice(50, 10) == 475);
+    // assert(totalPrice(100, 10) == 900);
 
     return EXIT_SUCCESS; // #define	EXIT_SUCCESS 0
 }

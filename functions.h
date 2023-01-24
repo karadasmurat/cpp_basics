@@ -32,6 +32,9 @@ void stringBasics();
 void arrayBasics();
 void constBasics();
 
+void switchBasics(int);
+void loopBasics();
+
 void vectorBasics();
 void mapBasics();
 void iteratorBasics();
@@ -123,3 +126,6 @@ void throwACustomException();
 void fileBasics();
 void readFile();
 void writeFile();
+
+// exercises
+unsigned long factorial(long n);

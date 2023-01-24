@@ -161,8 +161,11 @@ void variableBasics()
     are guaranteed to be initialized with 0/false/nullptr.
           */
 
-    // In C and C++, LOCAL primitives are NOT initialized by default.
-    // Uninitialized variables can contain any value, and their use leads to undefined behavior.
+    // Multiple Declaration
+    // If we need to declare several variables of the same type, we can combine them and use only one declaration
+    // statement.
+    // In C and C++, LOCAL primitives are NOT initialized by default. Uninitialized variables can contain any
+    // value, and their use leads to undefined behavior.
     int a, b, c; // Danger! You declared but didn’t give an initial value. Therefore, you get some “garbage value” that
                  // happened to be in that part of memory when you started executing.
 
@@ -175,17 +178,77 @@ void variableBasics()
 
     // If the braces are empty", the default constructors of (sub)objects are called and fundamental data types are
     // guaranteed to be initialized with 0 / false / nullptr.
-    int d{};                     // 0
-    int y{2};                    // initializer using the {} syntax - define and immediately initialize with 2
-    y = 9.9;                     // implicit conversion! from 9.9 to 9
-    y = static_cast<int>(99.99); // 99
+    int d{};  // 0
+    int y{2}; // initializer using the {} syntax - define and immediately initialize with 2
 
     int cnt = 39;
     y = cnt++; // 2 statements: y = cnt; cnt += 1;  therefore, y=39, cnt=40
     y = ++cnt; // 2 statements: cnt += 1; y = cnt;  therefore, y=41, cnt=41
 
+    // Compound Assignments
+    // Change the contents of a variable and store the result back into the variable
+    cnt += 3; // cnt = cnt + 3 : cnt is now 44
+
+    // Manipulators for Output
+    // Manipulator for Different Bases (dec, oct, hex)
+    // Although all integers are stored in the computer in binary base2, we may need to output them in our program in
+    // one of the three different formats: dec(base 10), oct(base 8), or hex(base 16).The default is dec.
+    int cnt02 = 10;
+    cout << "int variable in decimal    : " << cnt02 << endl;                // 10
+    cout << "int variable in octal      : " << oct << cnt02 << endl;         // 12
+    cout << "int variable in hexadecimal: " << hex << cnt02 << endl << endl; // A
+    // Outputting x with showbase
+    cout << "int variable in showbase octal: " << showbase << oct << cnt02 << endl;       // 012
+    cout << "int variable in showbase hexadecimal: " << showbase << hex << cnt02 << endl; // 0xA
+    cout << noshowbase << dec << endl;
+
+    double x = 1237234.1235;
+    // Applying common formats
+    // Positive Sign: showpos
+    cout << fixed << setprecision(2) << showpos << setfill('*');
+    // Printing x in three formats
+    cout << setw(20) << left << x << endl;
+    cout << setw(20) << internal << x << endl;
+    cout << setw(20) << right << x << endl;
+
     long cnt2 = 39L; // The default value is int (no suffix).
                      // To tell the compiler that we want long, we can use the suffix L (lowercase or uppercase)
+
+    // What happens if we try to store a number larger than the maximum value or smaller than the minimum value for
+    // a type? The result is overflow or underflow.
+
+    // Overflow and Underflow in Unsigned Integers
+    // Create two unsigned integer of maximum and minimum values
+    // maximum and minimum values are system dependent
+    unsigned int num1 = numeric_limits<unsigned int>::max(); // 4294967295
+    unsigned int num2 = numeric_limits<unsigned int>::min(); // 0
+    // Print the maximum and minimum values
+    cout << "The value of maximum unsigned int: " << num1 << endl;
+    cout << "The value of minimum unsigned int: " << num2 << endl;
+
+    // Force the integers to overflow
+    num1 += 1; // 0
+    num2 -= 1; // 4294967295
+
+    // Print the overflowed values
+    cout << "The value of MAX + 1 after overflow: " << num1 << endl;
+    cout << "The value of MIN - 1 after underflow: " << num2 << endl;
+
+    // Overflow and Underflow in Signed Integers
+    // Find the maximum and minimum of an integer
+    int int01 = numeric_limits<int>::max(); // 2147483647
+    int int02 = numeric_limits<int>::min(); // -2147483648
+    // Print the maximum and minimum values
+    cout << "Value of maximum signed int: " << int01 << endl;
+    cout << "Value of minimum signed int: " << int02 << endl;
+
+    // Cause num1 and num2 to overflow
+    int01 += 1; // -2147483648
+    int02 -= 1; // 2147483647
+
+    // Print the overflowed values
+    cout << "The value of MAX + 1 after overflow: " << int01 << endl;
+    cout << "The value of MIN - 1 after underflow: " << int02 << endl;
 
     uint8_t u8 = UINT8_MAX;
     uint16_t u16 = UINT16_MAX;
@@ -216,6 +279,16 @@ void variableBasics()
     unsigned int ui2 = -1;                               // Logical error, A negative value is changed to positive
     cout << "unsigned int assigned -1: " << ui2 << endl; // 4294967295
 
+    // Type conversion / implicit conversion
+    // Implicit type promotion
+    cout << "Type of s * 100: " << typeid(s * 100).name() << endl;
+    // Implicit type conversion(with side effect)
+    int i9 = 9.9; // implicit conversion! from 9.9 to 9
+    cout << "int i9 = 9.9; i: " << i9 << endl;
+    // Explicit Type Conversion (Casting)
+    int intPart = static_cast<int>(9.99); // 9
+    cout << "int intPart = static_cast<int>(9.99); intPart: " << intPart << endl;
+
     // double (default) and float for floating-point numbers
     // The reason for the name double is historical: double is short for “double-precision floating point.” Floating
     // point is the computer’s approximation to the mathematical concept of a real number.
@@ -225,23 +298,13 @@ void variableBasics()
     double int_math = 3 / 2;      // integer math! equals 1.0
     double double_math = 3.0 / 2; // 1.5
 
-    // char: an individual character enclosed in single quotes
-    char decimal_point = '.';
-
-    // string: a sequence of characters delimited by double quotes
-    string name = "Annemarie";
-
-    // bool for logical variables. either true or false
-    bool tap_on = true;
-
-    // string name2 = 39; // error: 39 isn’t a string
-    // int number_of_steps = "Annemarie";     // error: “Annemarie” is not an int”
+    long double ld = 245.784321L; // long double literal
 
     /*
-    Constants have the same declaration syntax as variables.
-    They differ in having const as part of their type and requiring an
-    initializer.
-    */
+   Constants have the same declaration syntax as variables.
+   They differ in having const as part of their type and requiring an
+   initializer.
+   */
     // It is almost always a good idea to initialize "variables" also; an
     // uninitialized variable is a recipe for obscure bugs.
 
@@ -250,8 +313,8 @@ void variableBasics()
 
     // The new C++ standards have made it possible to use auto as a placeholder for types in various contexts and
     // let the compiler deduce the actual type. The auto specifier is basically a placeholder for an actual type.
-    // If you use the auto specifier, you can still learn the type in  most IDEs by putting the cursor over a variable.
-    // auto x; // ERR - cannot deduce auto type (initializer required)
+    // If you use the auto specifier, you can still learn the type in  most IDEs by putting the cursor over a
+    // variable. auto x; // ERR - cannot deduce auto type (initializer required)
     auto title = "Surname"; // const char* title
     auto count = 1;         // int count
     auto temp = 1.0;        // double temp
@@ -267,6 +330,9 @@ void variableBasics()
     // TODO
     // sizes();
 
+    // char: an individual character enclosed in single quotes
+    char decimal_point = '.';
+
     // The size of a char as originally defined in C++ is 1 byte and it was implicitly unsigned.
     char first = 'A'; // A character literal is always enclosed in a pair of single quotes.
     char second = 65; // we can use integer literal
@@ -274,21 +340,18 @@ void variableBasics()
     cout << "Value of first char: " << first << "\tsize: " << sizeof(first) << endl;    // A, size: 1
     cout << "Value of second char: " << second << "\tsize: " << sizeof(second) << endl; // A, size: 1
 
-    // The C++ language defines a type called Boolean (named after the French mathematician/ philosopher George Bool) to
-    // represent a value that can be either true or false. The type is referred to as Boolean, but the type name used in
-    // a program is actually bool, which is a keyword.
-    // Since a Boolean type is in fact a 1 byte integer, we could use a small integer to represent a Boolean
-    // literal. Traditionally, any zero value is interpreted as false; any nonzero value is interpreted as true. When
-    // the value of a Boolean type is output, it is either 0 or 1.
+    // string: a sequence of characters delimited by double quotes
+    string name = "Annemarie";
 
-    if (127)
-        cout << "\n127 is true";
-    if (-1)
-        cout << "\n-1 is true";
-    if (0)
-        cout << "\n0 is true";
-    else
-        cout << "\n0 is false";
+    // string name2 = 39; // error: 39 isn’t a string
+    // int number_of_steps = "Annemarie";     // error: “Annemarie” is not an int”
+
+    // The C++ language defines a type called Boolean (named after the French mathematician/ philosopher George
+    // Bool) to represent a value that can be either true or false. The type is referred to as Boolean, but the type
+    // name used in a program is actually bool, which is a keyword. Since a Boolean type is in fact a 1 byte
+    // integer, we could use a small integer to represent a Boolean literal. Traditionally, any zero value is
+    // interpreted as false; any nonzero value is interpreted as true. When the value of a Boolean type is output,
+    // it is either 0 or 1.
 
     bool u = true;
     bool v = false;
@@ -299,6 +362,33 @@ void variableBasics()
     // boolalpha output
     cout << std::boolalpha << "boolalpha true: " << true << '\n' << "boolalpha false: " << false << '\n';
     cout << std::noboolalpha << "noboolalpha true: " << true << '\n' << "noboolalpha false: " << false << '\n';
+
+    if (127)
+        cout << "\n127 is true";
+    if (-1)
+        cout << "\n-1 is true";
+    if (0)
+        cout << "\n0 is true";
+    else
+        cout << "\n0 is false";
+
+    int body_temp = 40;
+    auto hot = body_temp >= 37; // assign the result of relational expression to a bool variable.
+    if (hot)
+        cout << "has fever. body temperature is: " << body_temp << endl;
+
+    // De Morgan’s law
+    // !(x && y) --> (!x || !y)
+    // !(x || y) --> (!x && !y)
+
+    // Short-Circuit Behavior with Logical AND OR Operators
+    if ((3 < 2) && (x = 2))
+    { // The second operand is ignored. x is not changed. (not == !!)
+    }
+
+    if ((2 < 5) || (x = 3))
+    { // The second operand is ignored. x is not changed. (not == !!)
+    }
 }
 
 string reverse_str(const string &s)
@@ -359,7 +449,8 @@ void stringBasics()
     const char *episode5 = "The Empire Strikes Back";
     const char *episode6 = "Return of the Jedi";
 
-    // name of an array is a pointer to (address of) first element, so access first element by dereferencing the name
+    // name of an array is a pointer to (address of) first element, so access first element by dereferencing the
+    // name
     cout << "*episode1: " << *episode1 << endl;               // T
     cout << "episode1: " << episode1 << endl;                 // The Phantom Menace
     cout << "strlen(episode1): " << strlen(episode1) << endl; // 18 (does not count '\0')
@@ -539,7 +630,8 @@ void arrayBasics()
     double areas[] = {1.0, 2.0, 3.0};
 
     // declare an array of Entity objects
-    // you would have to provide an initializer for each element of the array at the point where you define the array.
+    // you would have to provide an initializer for each element of the array at the point where you define the
+    // array.
     mk::Entity entities[5]; // calls the default constructor 5 times
 
     // C Language does not support strings out of the box.
@@ -653,6 +745,107 @@ void constBasics()
     doNotModifyArgument(box2); // OK
 }
 
+void switchBasics(int day)
+{
+
+    switch (day)
+    {
+    case 0:
+        cout << "Sunday" << endl;
+        break;
+    case 1:
+        cout << "Monday" << endl;
+        break;
+    case 2:
+        cout << "Tuesday" << endl;
+        break;
+    case 3:
+        cout << "Wednesday" << endl;
+        break;
+    case 4:
+        cout << "Thursday" << endl;
+        break;
+    case 5:
+        cout << "Friday" << endl;
+        break;
+    case 6:
+        cout << "Saturday" << endl;
+        break; // This is not needed, but added for parallelism
+    default:   // The default case must be the last case in a switch statement.
+        cout << "Invalid Day." << endl;
+    }
+}
+
+void loopBasics()
+{
+    /*
+    In a counter-controlled while loop,
+        * the counter is initialized before while entering the loop,
+        * it is checked with the limit in each iteration, and
+        * it is updated inside the loop.
+    */
+
+    // Declaration and initialization of counter
+    int counter = 0;
+    while (counter < 5) // The number of repetition is fixed to 10
+    {
+        cout << "Hello loops!" << endl;
+        counter++; // counter is updated inside the loop
+    }
+
+    // Sentinel controlled while loop
+    // A sentinel is a guard who prevents unauthorized persons from passing a point. In data processing, a sentinel is a
+    // value that is added to the list of data to show when we need to stop processing.
+    int sum = 0;
+    int num;
+    // Loop including the first input
+    cout << "Enter first integer (-1 to stop): ";
+    cin >> num;
+    while (num != -1)
+    {
+        sum = sum + num;
+        cout << "Enter next (-1 to stop): ";
+        cin >> num; // Sentinel update
+    }
+    // Print result
+    cout << "The sum is: " << sum << endl;
+
+    // do-while loop to validate data
+    // how to print error message in this version?
+    int score;
+    // // Input validation loop
+    // do
+    // {
+    //     cout << "Enter a score between 0 and 100: (try out of range) ";
+    //     cin >> score;
+    // } while (score < 0 || score > 100);
+
+    // version 2
+    cout << "Enter a score between 0 and 100: (try out of range) ";
+    cin >> score;
+    while (true)
+    {
+        if (score >= 0 && score <= 100) // if valid, then break.
+            break;
+
+        cout << "ERR. Please Enter a score between 0 and 100: "; // Print Err message, and get user input.
+        cin >> score;
+    }
+
+    cout << "Valid score: " << score << endl;
+
+    // nested for loops to print a set of asterisks horizontally and vertically
+    int rows = 4; // Number of rows
+    int cols = 7; // Number of columns
+    for (int i = 1; i <= rows; i++)
+    {
+        for (int j = 1; j <= cols; j++)
+        {
+            cout << "*";
+        }
+        cout << endl;
+    }
+}
 void inputBasics()
 {
     getUserInputStr();
@@ -782,11 +975,6 @@ void templateFunctions()
 
     simplePrint(max_i);
     simplePrint(max_d);
-}
-
-int getBiggerOfTwo(int x, int y)
-{
-    return x > y ? x : y;
 }
 
 void f_allDefaultArgs(int x = -1, int y = -2)
