@@ -1,7 +1,7 @@
 /*
 $ g++ -std=c++20 main.cpp helloworld.cpp domain.cpp -o main && ./main
 
-preprocessing output
+to see preprocessing output:
 $ clang -E helloworld.cpp -o helloworld.i
 
 The Clang Compiler is an open-source compiler for the C family of programming
@@ -25,36 +25,39 @@ Shortcut: Alt Shift F
 
 The compilation process
 1. pre-processor: Takes source code and produce pre-processed source file.
-2. compiler     : Takes pre-processed source file and compiles into
-object-files.
+2. compiler     : Takes pre-processed source file and compiles into object-files.
 3. linker       : Takes object files, links them into an executable program.
 
-*/
 
-/*
+To allow programs to be written in logical parts, C++ supports what is commonly known as separate compilation. Separate
+compilation lets us split our programs into several files, each of which can be compiled independently.
 
-To allow programs to be written in logical parts, C++ supports what is commonly
-known as separate compilation. Separate compilation lets us split our programs
-into several files, each of which can be compiled independently.
-
-To support separate compilation, C++ distinguishes between declarations and
-definitions. A declaration makes a name known to the program. A file that wants
-to use a name defined elsewhere includes a declaration for that name. A
+To support separate compilation, C++ distinguishes between declarations and definitions. A declaration makes a name
+known to the program. A file that wants to use a name defined elsewhere includes a declaration for that name. A
 definition creates the associated entity.
 
-Since #include s logically happen before anything else a compiler does, handling
-#includes is part of what is called "preprocessing" Including a header file
-produces the same results as copying the header file into each source file that
-needs it. Such copying would be time-consuming and error-prone. With a header
-file, the related declarations appear in only one place. If they need to be
-changed, they can be changed in one place, and programs that include the header
-file will automatically use the new version when next recompiled.
+Preprocessor Directives
+Since #include s logically happen before anything else a compiler does, handling #includes is part of what is called
+"preprocessing" Including a header file produces the same results as copying the header file into each source file that
+needs it. Such copying would be time-consuming and error-prone. With a header file, the related declarations appear in
+only one place. If they need to be changed, they can be changed in one place, and programs that include the header file
+will automatically use the new version when next recompiled.
 
 In C, the usual convention is to give header files names that end with .h
+
+
+Tokens
+    * Identifiers: names of an entity in the C++ language. An identifier must start with a letter or an underscore, and
+      it can have zero or more letters, digits, or underscores.
+    * Literals are constant values of different types.
+    * Symbols: C++ uses nonalphabetic symbols as operators and punctuation: [ ] ( ) { } * & -> << >> + ++ = == ! ...
+
+
 */
 
-#include "domain.h"
+#include "domain.h" // no semicolon after any include directive.
 #include "enums.h"
+#include "exercises.h"
 #include "functions.h"
 #include "mk_datastructures.h"
 #include "patterns.h"
@@ -412,14 +415,16 @@ int main()
 
     // exceptionBasics();
 
-    fileBasics();
+    // fileBasics();
 
     // mapBasics();
     // iteratorBasics();
 
     // memento();
 
-    return 0;
+    exercise1(6);
+
+    return EXIT_SUCCESS; // #define	EXIT_SUCCESS 0
 }
 
 // will copy b object !

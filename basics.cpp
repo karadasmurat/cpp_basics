@@ -1,3 +1,24 @@
+/*
+For every condition that has a range, make sure the tests include the first and last items in the range, as well as
+items before the first and after the last. The most common mistakes in range tests occur at the extremes of the range.
+
+Data Types
+1. Built-in (defined by the language)
+
+Fundamental (Primitive) :
+* Integer Type: A number without a fraction.
+The signed types can be positive or negative; the unsigned types are only positive. (If we do not explicitly define
+the sign of an integer, it is signed.) C++ allows three different sizes of integers. The language does not define the
+exact size and ranges of the different integer data types, it emphasizes their relative sizes:
+    long long >= long >= int >= short >= char
+
+    1.b Compound
+
+2. User Defined
+    2.a Enumerated
+    2.b Class
+*/
+
 #include "domain.h"
 #include "functions.h"
 #include <iomanip> // std::setprecision
@@ -83,20 +104,34 @@ void variableBasics()
 
     /*
 
+    Basically, we can do nothing of interest with a computer without storing data in memory. “The “places” in which we
+    store data are called objects. To access an object we need a name. A named object is called a variable and has a
+    specific type (such as int or string) that determines what can be put into the object.
+
+    A variable is a memory location, with a name and a type, that stores different values in each moment of a
+    program’s execution.
+
     In a C++ program, a name starts with a letter and contains only letters, digits, and underscores. Language reserves
     many (about 85) names as “keywords.” You can’t use those to name your variables, types, functions, etc.
+
+    The following are all invalid (illegal) identifiers and create a compilation error.
+
+    3z      // starts with a digit
+    $cnt    // symbols
+    sum@    // symbols
+    count-2 // symbols
+    delete  // keyword
+    double  // keyword
 
     Our “house style” is to use underscores to separate words in an identifier, such as element_count, rather than
     alternatives, such as elementCount and ElementCount.
 
-    We use an initial capital letter for types we define, such as Square and Graph. The C++ language and standard
-    library don’t use the initial-capital-letter style, so it’s int rather than Int and string rather than String. Thus,
-    our convention helps to minimize confusion between our types and the standard ones.
-
+    We use an initial capital letter for types we define, such as Square and Graph. The C++ language and
+    standard library don’t use the initial-capital-letter style, so it’s int rather than Int and string rather than
+    String. Thus, our convention helps to minimize confusion between our types and the standard ones.
 
     C++ provides a rather large number of types. However, you can write perfectly good programs using only five of
     those.
-
 
     Initialization is not assignment.
     It is tempting to think of initialization as a form of assignment, but initialization and assignment are different
@@ -109,41 +144,84 @@ void variableBasics()
     for us. For example, as we’ve just seen, the library string class says that if we do not supply an initializer, then
     the resulting string is the empty string
 
-    std::string str;  // implicitly initialized to the empty string
+            std::string str;  // implicitly initialized to the empty string
 
     The modern form of initialization (introduced in C++11 as "uniform initialization") with curly braces:
 
-        int i{42};
-        std::string s{"hello"};
+                int i{42};
+                std::string s{"hello"};
 
     This form of initialization, which is called brace initialization, has the following advantages:
-    • It can be used with fundamental types, class types, aggregates, enumeration types, and auto
-    • It can be used to initialize containers with multiple values
-    • It can detect narrowing errors (e.g., initialization of an int by a floating-point value)
-    • It cannot be confused with function declarations or calls
+        • It can be used with fundamental types, class types, aggregates, enumeration types, and auto
+        • It can be used to initialize containers with multiple values
+        • It can detect narrowing errors (e.g., initialization of an int by a floating-point value)
+        • It cannot be confused with function declarations or calls
 
-    "If the braces are empty", the default constructors of (sub)objects are called and fundamental data types are
-    guaranteed to be initialized with 0/false/nullptr.
-  */
+    If the braces are empty", the default constructors of (sub)objects are called and fundamental data types
+    are guaranteed to be initialized with 0/false/nullptr.
+          */
 
     // In C and C++, LOCAL primitives are NOT initialized by default.
     // Uninitialized variables can contain any value, and their use leads to undefined behavior.
-    int a, b, c; // Danger!
+    int a, b, c; // Danger! You declared but didn’t give an initial value. Therefore, you get some “garbage value” that
+                 // happened to be in that part of memory when you started executing.
+
+    // Assignment Operator (=)
+    // A variable on the right side of an assignment operator means "copy" the value of the variable(as a source); a
+    // variable on the left side of the assignment operator means store the value in that variable(as a destination).
     a = b + c;
     simplePrint("a", a); // i.e 26677
+    int $cnt = 0;        // is this a valid identifier?
 
-    int y{2};                    // initializer using the {} syntax - define and immediately
-                                 // initialize with 2
-    y = 9.9;                     // implicit conversion!
+    // If the braces are empty", the default constructors of (sub)objects are called and fundamental data types are
+    // guaranteed to be initialized with 0 / false / nullptr.
+    int d{};                     // 0
+    int y{2};                    // initializer using the {} syntax - define and immediately initialize with 2
+    y = 9.9;                     // implicit conversion! from 9.9 to 9
     y = static_cast<int>(99.99); // 99
 
     int cnt = 39;
     y = cnt++; // 2 statements: y = cnt; cnt += 1;  therefore, y=39, cnt=40
     y = ++cnt; // 2 statements: cnt += 1; y = cnt;  therefore, y=41, cnt=41
 
+    long cnt2 = 39L; // The default value is int (no suffix).
+                     // To tell the compiler that we want long, we can use the suffix L (lowercase or uppercase)
+
+    uint8_t u8 = UINT8_MAX;
+    uint16_t u16 = UINT16_MAX;
+    uint32_t u32 = UINT32_MAX;
+
+    cout << "UINT8_MAX  : " << u8 << ", size: " << sizeof(u8) << "\n";   // 255, size: 1
+    cout << "UINT16_MAX : " << u16 << ", size: " << sizeof(u16) << "\n"; // 65535, size: 2
+    cout << "UINT32_MAX : " << u32 << ", size: " << sizeof(u32) << "\n"; // 4 294 967 295, size: 4
+
+    short s = SHRT_MAX;
+    unsigned short us = USHRT_MAX;
+    int i = INT_MAX;
+    unsigned int ui = UINT_MAX;
+    long l = LONG_MAX;
+    unsigned long ul = ULONG_MAX;
+    long long ll = LLONG_MAX;
+    unsigned long long ull = ULLONG_MAX;
+
+    cout << "short max              : " << s << " \t\t\tsize:" << sizeof(s) << endl;    // 32767, size:2
+    cout << "unsigned short max     : " << us << " \t\t\tsize: " << sizeof(us) << endl; // 65535, size: 2
+    cout << "int max                : " << i << " \t\tsize: " << sizeof(i) << endl;     // 2147483647, size: 4
+    cout << "unsigned int max       : " << ui << " \t\tsize: " << sizeof(ui) << endl;   // 4294967295, size: 4
+    cout << "long max               : " << l << " \tsize: " << sizeof(l) << endl;       //
+    cout << "unsigned long max      : " << ul << " \tsize: " << sizeof(ul) << endl;     //
+    cout << "long long max          : " << ll << " \tsize: " << sizeof(ll) << endl;     //
+    cout << "unsigned long long max : " << ull << " \tsize: " << sizeof(ull) << endl;   //
+
+    unsigned int ui2 = -1;                               // Logical error, A negative value is changed to positive
+    cout << "unsigned int assigned -1: " << ui2 << endl; // 4294967295
+
     // double (default) and float for floating-point numbers
+    // The reason for the name double is historical: double is short for “double-precision floating point.” Floating
+    // point is the computer’s approximation to the mathematical concept of a real number.
+    // All floating-point numbers are signed.
     double flying_time(3.5);
-    float driving_time = 4.0f;
+    float driving_time = 4.0F;    // suffix F (lowercase or uppercase)
     double int_math = 3 / 2;      // integer math! equals 1.0
     double double_math = 3.0 / 2; // 1.5
 
@@ -188,6 +266,39 @@ void variableBasics()
 
     // TODO
     // sizes();
+
+    // The size of a char as originally defined in C++ is 1 byte and it was implicitly unsigned.
+    char first = 'A'; // A character literal is always enclosed in a pair of single quotes.
+    char second = 65; // we can use integer literal
+
+    cout << "Value of first char: " << first << "\tsize: " << sizeof(first) << endl;    // A, size: 1
+    cout << "Value of second char: " << second << "\tsize: " << sizeof(second) << endl; // A, size: 1
+
+    // The C++ language defines a type called Boolean (named after the French mathematician/ philosopher George Bool) to
+    // represent a value that can be either true or false. The type is referred to as Boolean, but the type name used in
+    // a program is actually bool, which is a keyword.
+    // Since a Boolean type is in fact a 1 byte integer, we could use a small integer to represent a Boolean
+    // literal. Traditionally, any zero value is interpreted as false; any nonzero value is interpreted as true. When
+    // the value of a Boolean type is output, it is either 0 or 1.
+
+    if (127)
+        cout << "\n127 is true";
+    if (-1)
+        cout << "\n-1 is true";
+    if (0)
+        cout << "\n0 is true";
+    else
+        cout << "\n0 is false";
+
+    bool u = true;
+    bool v = false;
+
+    cout << "Value of u: " << u << endl; // 1
+    cout << "Value of v: " << v << endl; // 0
+
+    // boolalpha output
+    cout << std::boolalpha << "boolalpha true: " << true << '\n' << "boolalpha false: " << false << '\n';
+    cout << std::noboolalpha << "noboolalpha true: " << true << '\n' << "noboolalpha false: " << false << '\n';
 }
 
 string reverse_str(const string &s)
@@ -218,20 +329,20 @@ void stringBasics()
 
     // initialize using double quotes
     // Option 1: square braces []
-    // An array of chars can be initialized with a string literal.
+    // An array of chars can be initialized with a string literal. (i.e. "Hagrid")
     // the compiler adds a terminating zero character at the end of a string literal.
     // this actually is
     // char name[6] = {'M','u','r','a','t','\0'};
     // so 6 element array is used to store 5 charecter string.
     // char name[5] = "Murat"; // ERR
     // - a value of type const char[6] cannot be used to init an entity of type char[5]
-    char name[] = "Murat";
+    char name[] = "Hagrid"; // An array of chars can be initialized with a string literal.
 
     // Option 2: USING A POINTER *
     // string literals are designed to be constant, stored in read-only memory
     // const modifier means that your compiler will complain if you try to modify an array with that particular
     // variable.
-    const char *surname = "Karadas";
+    const char *surname = "Snape";
 
     // The new C++ standards have made it possible to use auto as a placeholder for types in various contexts and
     // let the compiler deduce the actual type.
@@ -299,12 +410,14 @@ void stringBasics()
         cout << episode6[i++] << "_";
     }
 
+    // To use the C++ string, we must include the header file <string>
     // C++ has several different forms of initialization
 
     std::string s1;        // default initialization; empty string
-    std::string s2("MK");  // direct initialization
-    std::string s3 = s1;   // copy initialization
-    std::string s4 = "MK"; // copy initialization
+    std::string s2{"MK"};  // introduced in C++11 as "uniform initialization", with curly braces
+    std::string s3(s2);    // copy initialization
+    std::string s4 = s2;   // copy initialization
+    std::string s5 = "MK"; // copy initialization
     s1 = "MK";             // copy assignment (operator=) (s1 was initialized before)
 
     // Ask the compiler to provide appropriate type by using "auto".
