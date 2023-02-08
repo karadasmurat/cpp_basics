@@ -214,16 +214,6 @@ class B
     }
 };
 
-class NoCopy
-{
-
-  public:
-    NoCopy()
-    {
-    }
-    NoCopy(NoCopy &other) = delete;
-};
-
 class ResourceOnHeap
 {
   private:
@@ -245,73 +235,6 @@ class ResourceOnHeap
         // free the resources by deleting the array
         delete[] array;
         std::cout << "Destruct a ResourceOnHeap object\n";
-    }
-};
-
-class Shape2D
-{
-
-  public:
-    // An abstract class contains at least one pure virtual function. You declare a pure virtual function by using a
-    // pure specifier(= 0) in the declaration of a virtual member function in the class declaration.
-    virtual double area() = 0;
-    double perimeter();
-
-    void info()
-    {
-        cout << "This is Shape2D\n";
-    }
-
-    // The base class defines as virtual those functions it expects its derived classes to override.
-    // A base class specifies that a member function should be dynamically bound
-    // by preceding its declaration with the keyword "virtual"
-    // Member functions that are not declared as virtual are resolved at compile time, not run time.
-    // Derived classes frequently, but not always, override the virtual functions that they inherit.
-    // If a derived class does not override a virtual from its base, then, like any other member,
-    // the derived class inherits the version defined in its base class.
-
-    virtual void draw()
-    {
-        cout << "Drawing a shape" << endl;
-    }
-};
-
-class Rectangle : public Shape2D
-{
-
-    double width, height;
-};
-
-class Circle : public Shape2D
-{
-
-    double radius;
-
-  public:
-    Circle(double r) : radius(r)
-    {
-    }
-
-    void info()
-    {
-        cout << "This is Circle with radius: " << radius << "\n";
-    }
-
-    // A function that is declared as virtual in the base class is implicitly virtual in the derived classes as well.
-    // The new standard lets a derived class explicitly note that it intends a member function to override a virtual
-    // that it inherits. It does so by specifying override after the parameter list
-
-    void draw() override
-    {
-        cout << "Drawing a Circle" << endl;
-    }
-
-    // override pure virtual function of the base.
-    double area() override
-    {
-        double a = radius * radius * M_PI;
-        cout << "Area: " << a << endl;
-        return a;
     }
 };
 
@@ -399,7 +322,7 @@ int main()
     // pointerBasics();
     // dynamicMemory();
     // referenceBasics();
-    // classBasics();
+    classBasics();
     // inheritanceBasics();
 
     // enumBasics();
@@ -426,16 +349,16 @@ int main()
     // memento();
 
     // ====== exercises =========
-    try
-    {
-        factorial(-5L);
-    }
-    catch (std::invalid_argument e)
-    {
-        std::cout << e.what() << endl;
-    }
-    assert(factorial(5) == 120L);
-    assert(factorial(0) == 1L);
+    // try
+    // {
+    //     factorial(-5L);
+    // }
+    // catch (std::invalid_argument e)
+    // {
+    //     std::cout << e.what() << endl;
+    // }
+    // assert(factorial(5) == 120L);
+    // assert(factorial(0) == 1L);
 
     // exercise1(6);
     // exercise2(10);
@@ -524,8 +447,10 @@ void classBasics()
     cout << "After doNothing()\n";
 
     NoCopy nc1;
-    // NoCopy nc2 = nc1; // ERR
-    // NoCopy nc2(nc1);  // ERR
+    NoCopy nc2;
+    // NoCopy nc3{nc1}; // ERR copy constructor deleted.
+    // NoCopy nc4 = nc1; // ERR copy constructor deleted.
+    // nc2 = nc1; // ERR copy assignment operator is deleted.
 
     B b01; // Class B defines a no parameter constructor, it is executed.
 

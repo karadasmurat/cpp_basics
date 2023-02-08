@@ -108,8 +108,22 @@ template <typename T> void simplePrint(T *begin, T *end)
     }
     std::cout << "]" << std::endl;
 }
+
+// Print a vector
+// “Pass-by-const-reference”
+template <typename T> void simplePrint(const std::vector<T> &vect)
+{
+    std::cout << "[";
+    std::string separator; // empty string
+    for (const auto &e : vect)
+    {
+        std::cout << separator << e;
+        separator = ", ";
+    }
+    std::cout << "]" << std::endl;
+}
+
 void printTitle(const std::string &title);
-void simplePrint(const std::vector<int> &vect);
 
 void searchBasics();
 int binarySearch(int *arr, int cnt, int arg);

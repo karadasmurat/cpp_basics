@@ -146,11 +146,11 @@ Entity::Entity(const Entity &other) : e_name(other.e_name), e_size(other.e_size)
 
 Entity::~Entity()
 {
-    cout << "Destruct Entity obj " << e_name << endl;
+    cout << "Destruct Entity: " << e_name << endl;
 }
 
 // operator== overloading as a non-member function
-// Assume 2 entity instances are equal if their sizes are equal.
+// Assume 2 entity instances are equal if their specific data members (e_size) are equal.
 bool operator==(const Entity &lhs, const Entity &rhs)
 {
     // Guard self assignment
