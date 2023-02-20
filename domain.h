@@ -206,4 +206,50 @@ class NoCopy
     NoCopy &operator=(const NoCopy &other) = delete; // prevent copying
 };
 
+// simple test class
+struct X
+{
+    int val;
+
+    void info(const std::string &s, int nv)
+    {
+        std::cout << this << "–>" << s << ": " << val << " (" << nv << ")\n";
+    }
+
+    // default constructor
+    X() : val{0}
+    {
+        info("X()", val);
+    }
+
+    X(int v) : val{v}
+    {
+        info("X(int)", val);
+    }
+
+    // copy constructor
+    X(const X &other) : val{other.val}
+    {
+        info("X(X&) ", val);
+    }
+
+    // copy assignment
+    X &operator=(const X &other)
+    {
+        // do the copy
+        val = other.val;
+
+        info("X::operator=()", val);
+
+        // return the existing object so we can chain this operator
+        return *this;
+    }
+
+    // destructor
+    ~X()
+    {
+        info("~X()", 0);
+    }
+};
+
 } // namespace mk
