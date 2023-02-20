@@ -26,22 +26,41 @@ We typically have much more data than can fit in the main memory of our computer
 other large-capacity storage devices. “Such devices also have the desirable property that data doesn’t disappear when
 the power is turned off — the data is persistent.
 
-For a file, an ostream converts objects in main memory into streams
-of bytes and writes them to disk. An istream does the opposite; that is, it takes a stream of bytes from disk and
-composes objects from them. An ifstream is an istream for reading from a file, an ofstream is an ostream for writing to
-a file, and an fstream is an iostream that can be used for both reading and writing.
+By default, iostreams deal with character representations; that is, an istream reads a "sequence of characters" and
+turns it into an object of the desired type. An ostream takes an object of a specified type in main memory and
+transforms it into a sequence of characters which it writes out. An ifstream is an istream for reading from a file, an
+ofstream is an ostream for writing to a file, and an fstream is an iostream that can be used for both reading and
+writing.
 
-The fstream and stringstream classes are related by inheritance to the iostream
-classes. The input classes inherit from istream and the output classes from ostream. Thus, operations that can be
-performed on an istream object can also be performed on either an ifstream or an istringstream. Similarly for the output
-classes, which inherit from ostream.
+You can open a file in one of several modes. By default, an ifstream opens its file for reading and an ofstream opens
+its file for writing.
+
+String streams
+You can use a string as the source of an istream or the target for an ostream. An istream that reads from a string is
+called an "istringstream" and an ostream that stores characters written to it in a string is called an "ostringstream".
+
+Usually, we initialize an istringstream with a string and then read the characters from that string using input
+operations. Conversely, we typically initialize an ostringstream to the empty string and then fill it using output
+operations. A simple use of an ostringstream is to construct strings by concatenation.
+
+    std::ostringstream oss;
+    oss << "Product: "<< description << " Units: " << on_hand << " Price: "<< price << " Revenue: $" << revenue;
+    return oss.str();
+
+
+
+The fstream and stringstream classes are related by inheritance to the iostream classes. The input classes inherit from
+istream and the output classes from ostream. Thus, operations that can be performed on an istream object can also be
+performed on either an ifstream or an istringstream. Similarly for the output classes, which inherit from ostream.
 */
 
 #include "functions.h"
 #include <chrono>
 #include <fstream> // work with files
 #include <iostream>
+#include <sstream> // stringstream
 
+using std::cin;
 using std::cout;
 using std::endl;
 using std::ios;
@@ -68,14 +87,32 @@ std::ostream &operator<<(std::ostream &os, const Reading &r)
 // overloading '>>' operator.
 std::istream &operator>>(std::istream &is, Reading &r)
 {
-    // is >> r.hour >> r.temperature;
+    cout << "Enter hour and temperature, seperated by a space: (ie 21 33) ";
+    is >> r.hour >> r.temperature;
 
-    cout << "Enter hour: ";
-    is >> r.hour;
-    cout << "Enter temperature: ";
-    is >> r.temperature;
+    // cout << "Enter hour: ";
+    // is >> r.hour;
+    // cout << "Enter temperature: ";
+    // is >> r.temperature;
 
     return is;
+}
+
+/* Get a sentence as the input from the user */
+void words_of_sentence()
+{
+    string sentence;
+    cout << "Enter a sentence, and i will extract words: ";
+    std::getline(cin, sentence);
+
+    std::vector<string> words;
+    std::istringstream ss{sentence};
+
+    for (string word; ss >> word;) // for each word in Input string stream
+        words.push_back(word);     // extract the individual words
+
+    // print words
+    simplePrint(words);
 }
 
 void loadTemperaturesFromFile()
@@ -124,16 +161,17 @@ void saveTemperaturesToFile()
 
     // Defining an ofstream
     // std::ofstream ofstr{"temperatures.txt"};
+    std::ofstream ofs{"temperatures.txt", ios::app};
 
     // Defining an ofstream to "append"
-    std::ofstream ofstr;
+    // std::ofstream ofstr;
     // flags can be combined using the bitwise operator OR (|)
-    ofstr.open("temperatures.txt", ios::out | ios::app);
+    // ofstr.open("temperatures.txt", ios::out | ios::app);
 
-    if (ofstr)
+    if (ofs)
     {
         for (const auto &t : temps)
-            ofstr << t; // // operator<< overloaded.
+            ofs << t; // // operator<< overloaded.
     }
     else
     {
@@ -147,7 +185,9 @@ void fileBasics()
     // readFile();
 
     // saveTemperaturesToFile();
-    loadTemperaturesFromFile();
+    // loadTemperaturesFromFile();
+
+    words_of_sentence();
 }
 
 void writeFile()

@@ -516,6 +516,9 @@ void classBasics()
         cout << ent1 << " is equal to " << ent3 << endl;
     else
         cout << ent1 << " is NOT equal to " << ent3 << endl;
+
+    X obj1{4};    // local variable
+    X obj2{obj1}; // copy construction
 }
 
 void inheritanceBasics()

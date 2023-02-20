@@ -78,27 +78,6 @@ void simplePrint(int cnt, int *arg)
     cout << "]" << endl;
 }
 
-// “Pass-by-const-reference”
-void simplePrint(const std::vector<int> &vect)
-{
-    std::string separator;
-    cout << "\n[";
-    for (const auto &e : vect)
-    {
-        cout << separator << e;
-        separator = ", ";
-    }
-    cout << "]" << endl;
-
-    /* for (int i = 0; i < v.size(); i++) {
-       cout << "v[" << i << "]: " << v[i];
-       if (i != v.size() - 1)
-         cout << ", ";
-       else
-         cout << endl;
-     }*/
-}
-
 void variableBasics()
 {
 
@@ -169,6 +148,9 @@ void variableBasics()
     int a, b, c; // Danger! You declared but didn’t give an initial value. Therefore, you get some “garbage value” that
                  // happened to be in that part of memory when you started executing.
 
+    // It is almost always a good idea to initialize "variables" also; an uninitialized variable is a recipe for obscure
+    // bugs.
+
     // Assignment Operator (=)
     // A variable on the right side of an assignment operator means "copy" the value of the variable(as a source); a
     // variable on the left side of the assignment operator means store the value in that variable(as a destination).
@@ -178,7 +160,9 @@ void variableBasics()
 
     // If the braces are empty", the default constructors of (sub)objects are called and fundamental data types are
     // guaranteed to be initialized with 0 / false / nullptr.
-    int d{};  // 0
+    int i02 = int{}; // 0
+    int i01{};       // 0
+
     int y{2}; // initializer using the {} syntax - define and immediately initialize with 2
 
     int cnt = 39;
@@ -193,20 +177,33 @@ void variableBasics()
     // Manipulator for Different Bases (dec, oct, hex)
     // Although all integers are stored in the computer in binary base2, we may need to output them in our program in
     // one of the three different formats: dec(base 10), oct(base 8), or hex(base 16).The default is dec.
+    // Note that the last output is octal; that is, oct, hex, and dec (for decimal) persist (“stick,” “are sticky”) —
+    // they apply to every integer value output until we tell the stream otherwise.
     int cnt02 = 10;
-    cout << "int variable in decimal    : " << cnt02 << endl;                // 10
-    cout << "int variable in octal      : " << oct << cnt02 << endl;         // 12
-    cout << "int variable in hexadecimal: " << hex << cnt02 << endl << endl; // A
+    cout << "int variable in decimal    : " << cnt02 << endl;        // 10
+    cout << "int variable in octal      : " << oct << cnt02 << endl; // 12
+    cout << "int variable in hexadecimal: " << hex << cnt02 << endl; // A
     // Outputting x with showbase
+    // decimal numbers have no prefix, octal numbers have the prefix 0, and hexadecimals have the prefix 0x (or 0X).
     cout << "int variable in showbase octal: " << showbase << oct << cnt02 << endl;       // 012
     cout << "int variable in showbase hexadecimal: " << showbase << hex << cnt02 << endl; // 0xA
-    cout << noshowbase << dec << endl;
+    cout << noshowbase << dec << endl;                                                    // don’t use prefixes
 
-    double x = 1237234.1235;
+    double x = 1234.56789;
+
+    // By default, a floating-point value is printed using 6 total digits using the defaultfloat format.
+    // 1234.567 prints as 1234.57
+    // 1.2345678 prints as 1.23457
+    cout << x << "\t\t(defaultfloat)\n" // \t\t to line up columns
+         << fixed << x << "\t(fixed)\n"
+         << scientific << x << "\t(scientific)\n";
+
     // Applying common formats
     // Positive Sign: showpos
     cout << fixed << setprecision(2) << showpos << setfill('*');
-    // Printing x in three formats
+
+    // You can specify exactly how many character positions an integer value or string value will occupy using the “set
+    // field width” manipulator setw().
     cout << setw(20) << left << x << endl;
     cout << setw(20) << internal << x << endl;
     cout << setw(20) << right << x << endl;
@@ -305,8 +302,6 @@ void variableBasics()
    They differ in having const as part of their type and requiring an
    initializer.
    */
-    // It is almost always a good idea to initialize "variables" also; an
-    // uninitialized variable is a recipe for obscure bugs.
 
     const int x1 = 7;
     const int x2{9}; // initializer using the {} syntax
@@ -964,6 +959,56 @@ template <typename T> const T &getMax(const T &a, const T &b)
 
 void templateFunctions()
 {
+
+    /*
+    Function templates provide a functional behavior that can be called for different types.
+    In other words, a function template represents "a family of functions".
+
+    Template parameters are declared in angle brackets before the function template name:
+
+        template< comma-separated-list-of-parameters >
+
+        template<typename RT, typename T1, typename T2>
+        RT max (T1 a, T2 b);
+
+        ::max<double>(4, 7.2) // OK: return type is double, T1 and T2 are deduced to be int and double from arguments.
+
+    The process of replacing template parameters by concrete types is called instantiation. It results in an instance of
+    a template. Note that the mere use of a function template can trigger such an instantiation process. There is no
+    need for the programmer to request the instantiation separately.
+
+    An attempt to instantiate a template for a type that doesn’t support all the operations used within it will result
+    in a compile-time error.
+
+    When we call a function template such as max() for some arguments, the template parameters are determined by the
+    arguments we pass. If we pass two ints to the parameter types T, the C++ compiler has to conclude that T must be
+    int.
+
+    Overloading a function template:
+
+    // maximum of two int values:
+    int max (int a, int b) {
+        return b < a ? a : b;
+    }
+
+    // maximum of two values of any type:
+    template<typename T>
+    T max (T a, T b){
+        return b < a ? a : b;
+    }
+
+    ::max(7, 42); // calls the nontemplate for two ints
+    ::max(7.0, 42.0); // calls max<double> (by argument deduction)
+    ::max('a', 'b'); // calls max<char> (by argument deduction)
+    ::max<>(7, 42); // calls max<int> (by argument deduction)
+    ::max<double>(7, 42); // calls max<double> (no argument deduction)
+    ::max('a', 42.7); // calls the nontemplate for two ints
+
+    Because automatic type conversion is not considered for deduced template parameters but is considered for ordinary
+function parameters, the last call uses the nontemplate function (while 'a' and 42.7 both are converted to int)
+}
+ 
+    */
 
     std::cout << "smaller of 1 and 9999 is " << std::min(1, 9999) << '\n';
 

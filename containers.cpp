@@ -330,7 +330,8 @@ vector.
     // end is 1 past last, which is array_name+SIZE, or &array_name[SIZE]
     // array size is: end - begin (index starts at 0)
     std::sort(numArr, numArr + 5);
-    // TODO undefined symbols simplePrint(numArr, numArr + 5);
+    // TODO undefined symbols
+    simplePrint(numArr, numArr + 5);
 
     // If the object is const, then begin and end return a const_iterator.
     const vector<int> cv;
@@ -345,29 +346,29 @@ void mapBasics()
 {
 
     /*
-A map is a collection of key–value pairs.
+    A map is a collection of key–value pairs.
 
-For example, each pair might contain a person’s name as a key and a phone number as its value. We speak of such a data
-structure as “mapping names to phone numbers.”
+    For example, each pair might contain a person’s name as a key and a phone number as its value. We speak of such a
+    data structure as “mapping names to phone numbers.”
 
-The map type is often referred to as an associative array. An associative array is like a “normal” array except that its
-subscripts don’t have to be integers. Values in a map are found by a key rather than by their position.
+    The map type is often referred to as an associative array. An associative array is like a “normal” array except that
+    its subscripts don’t have to be integers. Values in a map are found by a key rather than by their position.
 
-Like the sequential containers, the associative containers are templates. To define a map, we must specify both the key
-and value types. The keys in a map or a set must be unique; there can be only one element with a given key.
+    Like the sequential containers, the associative containers are templates. To define a map, we must specify both the
+    key and value types. The keys in a map or a set must be unique; there can be only one element with a given key.
 
-For the ordered containers (map
- , multimap) — the key type must define a way to compare the elements. By default, the library uses the < operator for
-the key type to compare the keys.
+    For the ordered containers (map, multimap) — the key type must define a way to compare the elements.
+    By default, the library uses the < operator for the key type to compare the keys.
 
-A pair, which is defined in the utility header, holds two data members. Unlike other library types, the data members of
-pair are public. These members are named first and second, respectively.
+    The pair Type
+    A pair, which is defined in the utility header, holds two data members. Unlike other library types, the data members
+    of pair are public. These members are named first and second, respectively.
 
-Associative Container Iterators
-When we dereference an iterator, we get a reference to a value of the container’s value_type. In the case of map, the
-value_type is a pair in which first holds the const key and second holds the value. The associative container iterators
-are bidirectional.
-*/
+    Associative Container Iterators
+    When we dereference an iterator, we get a reference to a value of the container’s value_type. In the case of map,
+    the value_type is a pair in which first holds the const key and second holds the value. The associative container
+    iterators are bidirectional.
+    */
 
     printTitle("Map Basics");
 
@@ -394,7 +395,35 @@ are bidirectional.
     w_cnt.insert(std::make_pair("B", 2));
     w_cnt.insert(pair<string, size_t>{"C", 3});
 
+    // The map and unordered_map containers provide the subscript operator and a corresponding at function
+    // insert a value - initialized element with key D; then assign 4 to its value
+    w_cnt["D"] = 4;
+
+    // Accessing elements
+    cout << ++w_cnt["D"] << endl; // fetch the element indexed by Anna and add 1 to it (5)
+    // at function Returns a reference to the mapped value of the element identified with key k.
+    cout << w_cnt.at("A") << endl;
+
     // get an iterator to an element in word_count
     auto it = w_cnt.end();
     cout << (--it)->first << ": " << it->second << endl;
+
+    // erase on a key returns the number of elements removed
+    string removal_word{"B"};
+    if (w_cnt.erase(removal_word))
+        cout << "ok: " << removal_word << " removed\n";
+    else
+        cout << "oops: " << removal_word << " not found!\n";
+}
+
+void setBasics()
+{
+
+    printTitle("Set Basics");
+
+    /*
+    A set is simply a collection of keys.
+    A set is most useful when we simply want to know whether a value is present.
+
+    */
 }
